@@ -186,10 +186,10 @@ AddEventHandler('onResourceStart', function(resource)
 
     Wait(100)
 
-    if LocalPlayer.state['isLoggedIn'] then
+    if LocalPlayer.state.isLoggedIn then
         QBCore.Functions.GetPlayerData(function(PlayerData)
-            if PlayerData.metadata["injail"] > 0 then
-                TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
+            if PlayerData.metadata.injail > 0 then
+                TriggerEvent("prison:client:Enter", PlayerData.metadata.injail)
             end
         end)
     end
@@ -278,12 +278,15 @@ RegisterNetEvent('prison:client:Enter', function(time)
         return
     end
 
-    QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
-
-    TriggerEvent("chat:addMessage", {
-        color = {3, 132, 252},
-        multiline = true,
-        args = {"SYSTEM", Lang:t("info.seized_property")}
+    lib.notify({
+        description = Lang:t("error.injail", {
+            Time = time
+        }),
+        type = 'error'
+    })
+    lib.notify({
+        title = "SYSTEM",
+        description = Lang:t("info.seized_property")
     })
 
     DoScreenFadeOut(500)
@@ -325,11 +328,19 @@ RegisterNetEvent('prison:client:Enter', function(time)
     Wait(2000)
     DoScreenFadeIn(1000)
 
-    QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
+    lib.notify({
+        description = Lang:t("error.do_some_work", {
+            currentjob = Config.Jobs[currentJob]
+        }),
+        type = 'error'
+    })
 end)
 
 RegisterNetEvent('prison:client:Leave', function()
     if not inJail then
+        lib.notify({
+            description = "You are not jailed!"
+        })
         return
     end
 
@@ -342,10 +353,10 @@ RegisterNetEvent('prison:client:Leave', function()
 
         TriggerServerEvent("prison:server:SetJailStatus", 0)
         TriggerServerEvent("prison:server:GiveJailItems")
-        TriggerEvent("chat:addMessage", {
-            color = {3, 132, 252},
-            multiline = true,
-            args = {"SYSTEM", Lang:t("info.received_property")}
+
+        lib.notify({
+            title = "SYSTEM",
+            description = Lang:t("info.received_property")
         })
 
         inJail = false
@@ -384,10 +395,10 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
     if jailTime > 0 then
         TriggerServerEvent("prison:server:SetJailStatus", 0)
         TriggerServerEvent("prison:server:GiveJailItems")
-        TriggerEvent("chat:addMessage", {
-            color = {3, 132, 252},
-            multiline = true,
-            args = {"SYSTEM", Lang:t("info.received_property")}
+
+        lib.notify({
+            title = "SYSTEM",
+            description = Lang:t("info.received_property")
         })
 
         inJail = false

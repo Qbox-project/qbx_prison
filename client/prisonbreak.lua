@@ -49,10 +49,16 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
             end, function() -- Cancel
                 StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
 
-                QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
+                lib.notify({
+                    description = Lang:t("error.cancelled"),
+                    type = 'error'
+                })
             end)
         else
-            QBCore.Functions.Notify(Lang:t("error.item_missing"), "error")
+            lib.notify({
+                description = Lang:t("error.item_missing"),
+                type = 'error'
+            })
         end
     end
 end)
@@ -64,10 +70,10 @@ RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
         return
     end
 
-    TriggerEvent("chat:addMessage", {
-        color = {255, 0, 0},
-        multiline = true,
-        args = {"HOSTAGE", Lang:t("error.security_activated")}
+    lib.notify({
+        title = "HOSTAGE",
+        description = Lang:t("error.security_activated"),
+        type = 'error'
     })
 end)
 
@@ -174,7 +180,10 @@ CreateThread(function()
             TriggerServerEvent("prison:server:SetJailStatus", 0)
             TriggerServerEvent("prison:server:GiveJailItems", true)
 
-            QBCore.Functions.Notify(Lang:t("error.escaped"), "error")
+            lib.notify({
+                description = Lang:t("error.escaped"),
+                type = 'error'
+            })
         end
 
         Wait(1000)

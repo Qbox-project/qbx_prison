@@ -58,20 +58,28 @@ end
 --- This will set the job as done and give a new location at the same time for you to continue the job and give you some time cut as a reward
 --- @return nil
 local function JobDone()
-    if not Config.Locations.jobs[currentJob][currentLocation].done then return end
+    if not Config.Locations.jobs[currentJob][currentLocation].done then
+        return
+    end
 
     if math.random(1, 100) <= 50 then
-        QBCore.Functions.Notify(Lang:t("success.time_cut"))
+        lib.notify({
+            description = Lang:t("success.time_cut"),
+            type = 'success'
+        })
 
         jailTime -= math.random(1, 2)
     end
 
-    if CheckAllLocations() then ResetLocations() end
+    if CheckAllLocations() then
+        ResetLocations()
+    end
 
     local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
 
     while newLocation == currentLocation or Config.Locations.jobs[currentJob][newLocation].done do
         Wait(0)
+
         newLocation = math.random(1, #Config.Locations.jobs[currentJob])
     end
 
@@ -107,7 +115,10 @@ local function StartWork()
 
         StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
 
-        QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
+        lib.notify({
+            description = Lang:t("error.cancelled"),
+            type = 'error'
+        })
     end)
 end
 
