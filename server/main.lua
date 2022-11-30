@@ -16,7 +16,9 @@ RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
         if Player.PlayerData.job.name ~= "unemployed" then
             Player.Functions.SetJob("unemployed")
 
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.lost_job"))
+            TriggerClientEvent('ox_lib:notify', src, {
+                description = Lang:t("info.lost_job")
+            })
         end
     else
         GotItems[source] = nil
@@ -164,7 +166,10 @@ RegisterNetEvent('prison:server:CheckChance', function()
         return
     end
 
-    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_phone'), 'success')
+    TriggerClientEvent('ox_lib:notify', src, {
+        description = Lang:t('success.found_phone'),
+        type = 'success'
+    })
 
     GotItems[src] = true
 end)
