@@ -1,22 +1,5 @@
 local currentGate = 0
 local securityLockdown = false
-local Gates = {
-    [1] = {
-        gatekey = 13,
-        coords = vec3(1845.99, 2604.7, 45.58),
-        hit = false
-    },
-    [2] = {
-        gatekey = 14,
-        coords = vec3(1819.47, 2604.67, 45.56),
-        hit = false
-    },
-    [3] = {
-        gatekey = 15,
-        coords = vec3(1804.74, 2616.311, 45.61),
-        hit = false
-    }
-}
 
 -- Functions
 
@@ -24,11 +7,11 @@ local Gates = {
 --- @param success boolean
 --- @return nil
 local function OnHackDone(success)
-    Config.OnHackDone(success, currentGate, Gates[currentGate])
+    Config.OnHackDone(success, currentGate, Config.Gates[currentGate])
 end
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
-    if currentGate ~= 0 and not securityLockdown and not Gates[currentGate].hit then
+    if currentGate ~= 0 and not securityLockdown and not Config.Gates[currentGate].hit then
         local hasItem = QBCore.Functions.HasItem("gatecrack")
 
         if hasItem then
@@ -120,7 +103,7 @@ RegisterNetEvent('prison:client:PrisonBreakAlert', function()
 end)
 
 RegisterNetEvent('prison:client:SetGateHit', function(key, isHit)
-    Gates[key].hit = isHit
+    Config.Gates[key].hit = isHit
 end)
 
 RegisterNetEvent('prison:client:JailAlarm', function(toggle)
@@ -154,6 +137,42 @@ RegisterNetEvent('prison:client:JailAlarm', function(toggle)
 end)
 
 -- Threads
+CreateThread(function()
+    while true do
+        inRange = false
+        currentGate = 0
+
+        local sleep = 1000
+
+        if LocalPlayer.state.isLoggedIn then
+            if PlayerData.job.name ~= "police" then
+                local pos = GetEntityCoords(cache.ped)
+
+                for k, v in pairs(Config.Gates) do
+                    local dist =  #(pos - v.coords)
+
+                    if dist < 1.5 then
+                        currentGate = k
+                        inRange = true
+
+                        if securityLockdown then
+                            sleep = 0
+
+                            DrawText3D(v.coords.x, v.coords.y, v.coords.z, "~r~SYSTEM LOCKDOWN")
+                        elseif v.hit then
+                            sleep = 0
+
+                            DrawText3D(v.coords.x, v.coords.y, v.coords.z, "SYSTEM BREACH")
+                        end
+                    end
+                end
+            end
+        end
+
+        Wait(sleep)
+    end
+end)
+
 CreateThread(function()
     while true do
         local pos = GetEntityCoords(cache.ped, true)

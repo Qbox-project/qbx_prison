@@ -1,4 +1,5 @@
 QBCore = exports['qb-core']:GetCoreObject() -- Used Globally
+PlayerData = QBCore.Functions.GetPlayerData()
 inJail = false
 jailTime = 0
 currentJob = nil
@@ -109,11 +110,11 @@ end
 
 -- Events
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    QBCore.Functions.GetPlayerData(function(PlayerData)
-        if PlayerData.metadata["injail"] > 0 then
-            TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
-        end
-    end)
+    PlayerData = QBCore.Functions.GetPlayerData()
+
+    if PlayerData.metadata.injail > 0 then
+        TriggerEvent("prison:client:Enter", PlayerData.metadata.injail)
+    end
 
     QBCore.Functions.TriggerCallback('prison:server:IsAlarmActive', function(active)
         if active then
@@ -263,10 +264,15 @@ AddEventHandler('onResourceStart', function(resource)
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
+    PlayerData = {}
     inJail = false
     currentJob = nil
 
     RemoveBlip(currentBlip)
+end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
+    PlayerData.job = JobInfo
 end)
 
 RegisterNetEvent('prison:client:Enter', function(time)
@@ -444,42 +450,6 @@ RegisterNetEvent('prison:client:canteen', function()
 end)
 
 -- Threads
-CreateThread(function()
-    while true do
-        inRange = false
-        currentGate = 0
-
-        local sleep = 1000
-
-        if LocalPlayer.state.isLoggedIn then
-            if PlayerJob.name ~= "police" then
-                local pos = GetEntityCoords(cache.ped)
-
-                for k in pairs(Gates) do
-                    local dist =  #(pos - Gates[k].coords)
-
-                    if dist < 1.5 then
-                        currentGate = k
-                        inRange = true
-
-                        if securityLockdown then
-                            sleep = 0
-
-                            DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, "~r~SYSTEM LOCKDOWN")
-                        elseif Gates[k].hit then
-                            sleep = 0
-
-                            DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, "SYSTEM BREACH")
-                        end
-                    end
-                end
-            end
-        end
-
-        Wait(sleep)
-    end
-end)
-
 CreateThread(function()
     TriggerEvent('prison:client:JailAlarm', false)
 

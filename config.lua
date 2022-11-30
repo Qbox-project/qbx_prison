@@ -154,3 +154,15 @@ Config.CanteenItems = {
         slot = 2
     }
 }
+
+Config.Gates = {
+    [1] = {
+        coords = vec3(1845.99, 2604.7, 45.58)
+    },
+    [2] = {
+        coords = vec3(1819.47, 2604.67, 45.56)
+    },
+    [3] = {
+        coords = vec3(1804.74, 2616.311, 45.61)
+    }
+}
