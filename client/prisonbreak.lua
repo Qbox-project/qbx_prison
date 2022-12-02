@@ -3,6 +3,29 @@ local securityLockdown = false
 
 -- Functions
 
+--- This will draw 3d text at the given location with the given text
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param text string
+--- @return nil
+local function DrawText3D(x, y, z, text)
+    SetTextScale(0.35, 0.35)
+    SetTextFont(4)
+    SetTextColour(255, 255, 255, 215)
+    SetTextCentre(true)
+    SetDrawOrigin(x, y, z, 0)
+
+    AddTextComponentSubstringPlayerName(text)
+    BeginTextCommandDisplayText("STRING")
+    EndTextCommandDisplayText(0.0, 0.0)
+
+    local factor = (string.len(text)) / 370
+
+    DrawRect(0.0, 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
+    ClearDrawOrigin()
+end
+
 --- This will be triggered once a hack is done on a gate
 --- @param success boolean
 --- @return nil
@@ -15,28 +38,34 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
         local hasItem = QBCore.Functions.HasItem("gatecrack")
 
         if hasItem then
-            QBCore.Functions.Progressbar("hack_gate", Lang:t("info.connecting_device"), math.random(5000, 10000), false, true, {
-                disableMovement = true,
-                disableCarMovement = true,
-                disableMouse = false,
-                disableCombat = true
-            }, {
-                animDict = "anim@gangops@facility@servers@",
-                anim = "hotwire",
-                flags = 16
-            }, {}, {}, function() -- Done
+            if lib.progressBar({
+                duration = math.random(5000, 10000),
+                label = Lang:t("info.connecting_device"),
+                useWhileDead = false,
+                canCancel = true,
+                disable = {
+                    move = true,
+                    car = true,
+                    combat = true
+                },
+                anim = {
+                    dict = 'anim@gangops@facility@servers@',
+                    clip = 'hotwire',
+                    flag = 16
+                }
+            }) then
                 StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
 
                 TriggerEvent("mhacking:show")
                 TriggerEvent("mhacking:start", math.random(5, 9), math.random(10, 18), OnHackDone)
-            end, function() -- Cancel
+            else
                 StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
 
                 lib.notify({
                     description = Lang:t("error.cancelled"),
                     type = 'error'
                 })
-            end)
+            end
         else
             lib.notify({
                 description = Lang:t("error.item_missing"),
@@ -61,7 +90,7 @@ RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
 end)
 
 RegisterNetEvent('prison:client:PrisonBreakAlert', function()
-    local coords = vec3(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y, Config.Locations["middle"].coords.z)
+    local coords = vec3(Config.Locations.middle.coords.x, Config.Locations.middle.coords.y, Config.Locations.middle.coords.z)
     local alertData = {
         title = Lang:t("info.police_alert_title"),
         coords = {
@@ -72,7 +101,6 @@ RegisterNetEvent('prison:client:PrisonBreakAlert', function()
         description = Lang:t("info.police_alert_description")
     }
 
-    TriggerEvent("qb-phone:client:addPoliceAlert", alertData)
     TriggerEvent('police:client:policeAlert', coords, Lang:t("info.police_alert_description"))
 
     local BreakBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
@@ -177,7 +205,7 @@ CreateThread(function()
     while true do
         local pos = GetEntityCoords(cache.ped, true)
 
-        if #(pos.xy - vec2(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y)) > 200 and inJail then
+        if #(pos.xy - vec2(Config.Locations.middle.coords.x, Config.Locations.middle.coords.y)) > 200 and inJail then
             inJail = false
             jailTime = 0
 

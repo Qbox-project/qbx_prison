@@ -95,22 +95,28 @@ local function StartWork()
 
     Config.Locations.jobs[currentJob][currentLocation].done = true
 
-    QBCore.Functions.Progressbar("work_electric", Lang:t("info.working_electricity"), math.random(5000, 10000), false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true
-    }, {
-        animDict = "anim@gangops@facility@servers@",
-        anim = "hotwire",
-        flags = 16
-    }, {}, {}, function() -- Done
+    if lib.progressBar({
+        duration = math.random(5000, 10000),
+        label = Lang:t("info.working_electricity"),
+        useWhileDead = false,
+        canCancel = true,
+        disable = {
+            move = true,
+            car = true,
+            combat = true
+        },
+        anim = {
+            dict = 'anim@gangops@facility@servers@',
+            clip = 'hotwire',
+            flag = 16
+        }
+    }) then
         isWorking = false
 
         StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
 
         JobDone()
-    end, function() -- Cancel
+    else
         isWorking = false
 
         StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
@@ -119,7 +125,7 @@ local function StartWork()
             description = Lang:t("error.cancelled"),
             type = 'error'
         })
-    end)
+    end
 end
 
 -- Threads

@@ -85,7 +85,7 @@ RegisterNetEvent('prison:server:SecurityLockdown', function()
                 TriggerClientEvent("prison:client:PrisonBreakAlert", v)
             end
         end
-	end
+    end
 end)
 
 RegisterNetEvent('prison:server:SetGateHit', function(key)
@@ -134,7 +134,7 @@ RegisterNetEvent('prison:server:JailAlarm', function()
 
     local playerPed = GetPlayerPed(source)
     local coords = GetEntityCoords(playerPed)
-    local middle = vec2(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y)
+    local middle = vec2(Config.Locations.middle.coords.x, Config.Locations.middle.coords.y)
 
     if #(coords.xy - middle) < 200 then
         return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event')

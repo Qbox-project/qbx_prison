@@ -13,29 +13,6 @@ local freedom_ped = 0
 
 -- Functions
 
---- This will draw 3d text at the given location with the given text
---- @param x number
---- @param y number
---- @param z number
---- @param text string
---- @return nil
-local function DrawText3D(x, y, z, text)
-    SetTextScale(0.35, 0.35)
-    SetTextFont(4)
-    SetTextColour(255, 255, 255, 215)
-    SetTextCentre(true)
-    SetDrawOrigin(x, y, z, 0)
-
-    AddTextComponentSubstringPlayerName(text)
-    BeginTextCommandDisplayText("STRING")
-    EndTextCommandDisplayText(0.0, 0.0)
-
-    local factor = (string.len(text)) / 370
-
-    DrawRect(0.0, 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
-    ClearDrawOrigin()
-end
-
 --- This will create the blips for the cells, time check and shop
 --- @return nil
 local function CreateCellsBlip()
@@ -43,7 +20,7 @@ local function CreateCellsBlip()
         RemoveBlip(CellsBlip)
     end
 
-    CellsBlip = AddBlipForCoord(Config.Locations["yard"].coords.x, Config.Locations["yard"].coords.y, Config.Locations["yard"].coords.z)
+    CellsBlip = AddBlipForCoord(Config.Locations.yard.coords.x, Config.Locations.yard.coords.y, Config.Locations.yard.coords.z)
 
     SetBlipSprite(CellsBlip, 238)
     SetBlipDisplay(CellsBlip, 4)
@@ -58,7 +35,7 @@ local function CreateCellsBlip()
         RemoveBlip(TimeBlip)
     end
 
-    TimeBlip = AddBlipForCoord(Config.Locations["freedom"].zone.coords.x, Config.Locations["freedom"].zone.coords.y, Config.Locations["freedom"].zone.coords.z)
+    TimeBlip = AddBlipForCoord(Config.Locations.freedom.zone.coords.x, Config.Locations.freedom.zone.coords.y, Config.Locations.freedom.zone.coords.z)
 
     SetBlipSprite(TimeBlip, 466)
     SetBlipDisplay(TimeBlip, 4)
@@ -74,7 +51,7 @@ local function CreateCellsBlip()
         RemoveBlip(ShopBlip)
     end
 
-    ShopBlip = AddBlipForCoord(Config.Locations["shop"].zone.coords.x, Config.Locations["shop"].zone.coords.y, Config.Locations["shop"].zone.coords.z)
+    ShopBlip = AddBlipForCoord(Config.Locations.shop.zone.coords.x, Config.Locations.shop.zone.coords.y, Config.Locations.shop.zone.coords.z)
 
     SetBlipSprite(ShopBlip, 52)
     SetBlipDisplay(ShopBlip, 4)
@@ -126,7 +103,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
         return
     end
 
-    local freedomData = Config.Locations["freedom"]
+    local freedomData = Config.Locations.freedom
 
     lib.requestModel(freedomData.ped.model)
 
@@ -137,7 +114,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     SetBlockingOfNonTemporaryEvents(freedom_ped, true)
     TaskStartScenarioInPlace(freedom_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
 
-    local shopData = Config.Locations["shop"]
+    local shopData = Config.Locations.shop
 
     lib.requestModel(shopData.ped.model)
 
@@ -207,7 +184,7 @@ AddEventHandler('onResourceStart', function(resource)
         return
     end
 
-    local freedomData = Config.Locations["freedom"]
+    local freedomData = Config.Locations.freedom
 
     lib.requestModel(freedomData.ped.model)
 
@@ -218,7 +195,7 @@ AddEventHandler('onResourceStart', function(resource)
     SetBlockingOfNonTemporaryEvents(freedom_ped, true)
     TaskStartScenarioInPlace(freedom_ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
 
-    local shopData = Config.Locations["shop"]
+    local shopData = Config.Locations.shop
 
     lib.requestModel(shopData.ped.model)
 
@@ -351,9 +328,11 @@ RegisterNetEvent('prison:client:Leave', function()
     end
 
     if jailTime > 0 then
-        QBCore.Functions.Notify( Lang:t("info.timeleft", {
-            JAILTIME = jailTime
-        }))
+        lib.notify({
+            description = Lang:t("info.timeleft", {
+                JAILTIME = jailTime
+            })
+        })
     else
         jailTime = 0
 
@@ -380,7 +359,10 @@ RegisterNetEvent('prison:client:Leave', function()
 
         ShopBlip = nil
 
-        QBCore.Functions.Notify(Lang:t("success.free_"))
+        lib.notify({
+            description = Lang:t("success.free_"),
+            type = 'success'
+        })
 
         DoScreenFadeOut(500)
         while not IsScreenFadedOut() do
@@ -389,8 +371,8 @@ RegisterNetEvent('prison:client:Leave', function()
 
         TriggerServerEvent('qb-clothes:loadPlayerSkin')
 
-        SetEntityCoords(cache.ped, Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
-        SetEntityHeading(cache.ped, Config.Locations["outside"].coords.w)
+        SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, 0, 0, 0, false)
+        SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
 
         Wait(500)
         DoScreenFadeIn(1000)
@@ -422,7 +404,10 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
 
         ShopBlip = nil
 
-        QBCore.Functions.Notify(Lang:t("success.free_"))
+        lib.notify({
+            description = Lang:t("success.free_"),
+            type = 'success'
+        })
 
         DoScreenFadeOut(500)
         while not IsScreenFadedOut() do
@@ -431,8 +416,8 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
 
         TriggerServerEvent('qb-clothes:loadPlayerSkin')
 
-        SetEntityCoords(cache.ped, Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
-        SetEntityHeading(cache.ped, Config.Locations["outside"].coords.w)
+        SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, 0, 0, 0, false)
+        SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
 
         Wait(500)
         DoScreenFadeIn(1000)
@@ -467,7 +452,11 @@ CreateThread(function()
                 if jailTime <= 0 then
                     jailTime = 0
 
-                    QBCore.Functions.Notify(Lang:t("success.timesup"), "success", 10000)
+                    lib.notify({
+                        description = Lang:t("success.timesup"),
+                        duration = 10000,
+                        type = 'success'
+                    })
                 end
 
                 TriggerServerEvent("prison:server:SetJailStatus", jailTime)
@@ -481,9 +470,9 @@ end)
 CreateThread(function()
     if not Config.UseTarget then
         lib.zones.box({
-            coords = Config.Locations["freedom"].zone.coords,
-            size = Config.Locations["freedom"].zone.size,
-            rotation = Config.Locations["freedom"].zone.rotation,
+            coords = Config.Locations.freedom.zone.coords,
+            size = Config.Locations.freedom.zone.size,
+            rotation = Config.Locations.freedom.zone.rotation,
             onEnter = function(_)
                 insidefreedom = true
 
@@ -509,9 +498,9 @@ CreateThread(function()
             end
         })
         lib.zones.box({
-            coords = Config.Locations["shop"].zone.coords,
-            size = Config.Locations["shop"].zone.size,
-            rotation = Config.Locations["shop"].zone.rotation,
+            coords = Config.Locations.shop.zone.coords,
+            size = Config.Locations.shop.zone.size,
+            rotation = Config.Locations.shop.zone.rotation,
             onEnter = function(_)
                 insidecanteen = true
 
