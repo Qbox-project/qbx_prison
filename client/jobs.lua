@@ -126,9 +126,9 @@ CreateThread(function()
                 electricityzone:onPlayerInOut(function(isPointInside)
                     isInside = isPointInside and inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
                     if isInside then
-                        exports['qb-core']:DrawText(Lang:t("info.job_interaction"), 'left')
+                        exports['qbx-core']:DrawText(Lang:t("info.job_interaction"), 'left')
                     else
-                        exports['qb-core']:HideText()
+                        exports['qbx-core']:HideText()
                     end
                 end)
             end

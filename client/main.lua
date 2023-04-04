@@ -1,4 +1,4 @@
-QBCore = exports['qb-core']:GetCoreObject() -- Used Globally
+QBCore = exports['qbx-core']:GetCoreObject() -- Used Globally
 inJail = false
 jailTime = 0
 currentJob = nil
@@ -379,17 +379,17 @@ CreateThread(function()
 				CreateThread(function()
 					while insidefreedom do
 						if IsControlJustReleased(0, 38) then
-							exports['qb-core']:KeyPressed()
-							exports['qb-core']:HideText()
+							exports['qbx-core']:KeyPressed()
+							exports['qbx-core']:HideText()
 							TriggerEvent("prison:client:Leave")
 							break
 						end
 						Wait(0)
 					end
 				end)
-				exports['qb-core']:DrawText('[E] Check Time', 'left')
+				exports['qbx-core']:DrawText('[E] Check Time', 'left')
 			else
-				exports['qb-core']:HideText()
+				exports['qbx-core']:HideText()
 			end
 		end)
 		canteen = BoxZone:Create(vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z), 2.75, 7.75, {
@@ -402,17 +402,17 @@ CreateThread(function()
 				CreateThread(function()
 					while insidecanteen do
 						if IsControlJustReleased(0, 38) then
-							exports['qb-core']:KeyPressed()
-							exports['qb-core']:HideText()
+							exports['qbx-core']:KeyPressed()
+							exports['qbx-core']:HideText()
 							TriggerEvent("prison:client:canteen")
 							break
 						end
 						Wait(0)
 					end
 				end)
-				exports['qb-core']:DrawText('[E] Open Canteen', 'left')
+				exports['qbx-core']:DrawText('[E] Open Canteen', 'left')
 			else
-				exports['qb-core']:HideText()
+				exports['qbx-core']:HideText()
 			end
 		end)
 	end
