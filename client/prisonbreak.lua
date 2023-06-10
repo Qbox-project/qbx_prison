@@ -26,7 +26,6 @@ local Gates = {
 
 --- This will be triggered once a hack is done on a gate
 --- @param success boolean
---- @return nil
 local function OnHackDone(success)
     Config.OnHackDone(success, currentGate, Gates[currentGate])
 end
@@ -36,17 +35,16 @@ end
 --- @param y number
 --- @param z number
 --- @param text string
---- @return nil
 local function DrawText3D(x, y, z, text)
     SetTextScale(0.35, 0.35)
     SetTextFont(4)
-    SetTextProportional(1)
+    SetTextProportional(true)
     SetTextColour(255, 255, 255, 215)
-    SetTextEntry("STRING")
+    BeginTextCommandDisplayText("STRING")
     SetTextCentre(true)
-    AddTextComponentString(text)
+    AddTextComponentSubstringPlayerName(text)
     SetDrawOrigin(x,y,z, 0)
-    DrawText(0.0, 0.0)
+    EndTextCommandDisplayText(0.0, 0.0)
     local factor = (string.len(text)) / 370
     DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
@@ -72,23 +70,30 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
         local hasItem = QBCore.Functions.HasItem("gatecrack")
         if hasItem then
             TriggerEvent('inventory:client:requiredItems', requiredItems, false)
-            QBCore.Functions.Progressbar("hack_gate", Lang:t("info.connecting_device"), math.random(5000, 10000), false, true, {
-                disableMovement = true,
-                disableCarMovement = true,
-                disableMouse = false,
-                disableCombat = true,
-            }, {
-                animDict = "anim@gangops@facility@servers@",
-                anim = "hotwire",
-                flags = 16,
-            }, {}, {}, function() -- Done
-                StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
+            if lib.progressBar({
+                duration = math.random(5000, 10000),
+                label = Lang:t("info.connecting_device"),
+                useWhileDead = false,
+                canCancel = true,
+                anim = {
+                    dict = "anim@gangops@facility@servers@",
+                    clip = "hotwire",
+                    flag = 16
+                },
+                disable = {
+                    move = true,
+                    car = true,
+                    mouse = false,
+                    combat = true
+                }
+            }) then
                 TriggerEvent("mhacking:show")
                 TriggerEvent("mhacking:start", math.random(5, 9), math.random(10, 18), OnHackDone)
-            end, function() -- Cancel
-                StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
+            else
                 QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
-            end)
+            end
+
+            StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
         else
             QBCore.Functions.Notify(Lang:t("error.item_missing"), "error")
         end
@@ -117,13 +122,13 @@ RegisterNetEvent('prison:client:PrisonBreakAlert', function()
     SetBlipScale(BreakBlip , 3.0)
     SetBlipColour(BreakBlip, 3)
     PulseBlip(BreakBlip)
-    PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
+    PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", false, 0, true)
     Wait(100)
-    PlaySoundFrontend( -1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1 )
+    PlaySoundFrontend(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true)
     Wait(100)
-    PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
+    PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", false, 0, true)
     Wait(100)
-    PlaySoundFrontend( -1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1 )
+    PlaySoundFrontend(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true)
     Wait((1000 * 60 * 5))
     RemoveBlip(BreakBlip)
 end)
@@ -174,7 +179,7 @@ CreateThread(function()
         local sleep = 1000
         if LocalPlayer.state.isLoggedIn then
             if PlayerJob.name ~= "police" then
-                local pos = GetEntityCoords(PlayerPedId())
+                local pos = GetEntityCoords(cache.ped)
                 for k in pairs(Gates) do
                     local dist =  #(pos - Gates[k].coords)
                     if dist < 1.5 then
@@ -207,17 +212,14 @@ end)
 
 CreateThread(function()
     while true do
-        local pos = GetEntityCoords(PlayerPedId(), true)
+        local pos = GetEntityCoords(cache.ped, true)
         if #(pos.xy - vec2(Config.Locations["middle"].coords.x, Config.Locations["middle"].coords.y)) > 200 and inJail then
             inJail = false
             jailTime = 0
             RemoveBlip(currentBlip)
             RemoveBlip(CellsBlip)
-            CellsBlip = nil
             RemoveBlip(TimeBlip)
-            TimeBlip = nil
             RemoveBlip(ShopBlip)
-            ShopBlip = nil
             TriggerServerEvent("prison:server:SecurityLockdown")
             TriggerEvent("prison:client:PrisonBreakAlert")
             TriggerServerEvent("prison:server:SetJailStatus", 0)
