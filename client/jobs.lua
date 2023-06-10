@@ -6,7 +6,6 @@ local isWorking = false
 
 --- This will create the blip for the current prison job and give a reward if they were done with the previous one
 --- @param noItem boolean | nil
---- @return nil
 function CreateJobBlip(noItem) -- Used globally
     if DoesBlipExist(currentBlip) then
         RemoveBlip(currentBlip)
@@ -40,7 +39,6 @@ local function CheckAllLocations()
 end
 
 --- This will reset all location of the current job
---- @return nil
 local function ResetLocations()
     for i = 1, #Config.Locations.jobs[currentJob] do
         Config.Locations.jobs[currentJob][i].done = false
@@ -48,7 +46,6 @@ local function ResetLocations()
 end
 
 --- This will set the job as done and give a new location at the same time for you to continue the job and give you some time cut as a reward
---- @return nil
 local function JobDone()
     if not Config.Locations.jobs[currentJob][currentLocation].done then return end
     if math.random(1, 100) <= 50 then
@@ -66,7 +63,6 @@ local function JobDone()
 end
 
 --- This will be triggered once you interact with a job location to perform your job at
---- @return nil
 local function StartWork()
     isWorking = true
     Config.Locations.jobs[currentJob][currentLocation].done = true
