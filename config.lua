@@ -8,7 +8,6 @@ if not isServer then
     --- @param success boolean
     --- @param currentGate number
     --- @param gateData table
-    --- @return nil
     function Config.OnHackDone(success, currentGate, gateData)
         if success then
             TriggerServerEvent("prison:server:SetGateHit", currentGate)
