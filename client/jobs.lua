@@ -11,6 +11,7 @@ function CreateJobBlip(noItem) -- Used globally
     if DoesBlipExist(currentBlip) then
         RemoveBlip(currentBlip)
     end
+
     local coords = Config.Locations.jobs[currentJob][currentLocation].coords.xyz
     currentBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(currentBlip, 402)
@@ -69,24 +70,30 @@ end
 local function StartWork()
     isWorking = true
     Config.Locations.jobs[currentJob][currentLocation].done = true
-    QBCore.Functions.Progressbar("work_electric", Lang:t("info.working_electricity"), math.random(5000, 10000), false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = "anim@gangops@facility@servers@",
-        anim = "hotwire",
-        flags = 16,
-    }, {}, {}, function() -- Done
-        isWorking = false
-        StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
+    if lib.progressBar({
+        duration = math.random(5000, 10000),
+        label = Lang:t("info.working_electricity"),
+        useWhileDead = false,
+        canCancel = true,
+        anim = {
+            dict = "anim@gangops@facility@servers@",
+            clip = "hotwire",
+            flag = 16
+        },
+        disable = {
+            move = true,
+            car = true,
+            mouse = false,
+            combat = true
+        }
+    }) then
         JobDone()
-    end, function() -- Cancel
-        isWorking = false
-        StopAnimTask(PlayerPedId(), "anim@gangops@facility@servers@", "hotwire", 1.0)
+    else
         QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
-    end)
+    end
+
+    isWorking = false
+    StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
 end
 
 -- Threads
