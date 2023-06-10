@@ -2,9 +2,9 @@ QBCore = exports['qbx-core']:GetCoreObject() -- Used Globally
 inJail = false
 jailTime = 0
 currentJob = nil
-CellsBlip = nil
-TimeBlip = nil
-ShopBlip = nil
+CellsBlip = 0
+TimeBlip = 0
+ShopBlip = 0
 local insidecanteen = false
 local insidefreedom = false
 local canteen_ped = 0
@@ -15,11 +15,11 @@ local canteen
 -- Functions
 
 --- This will create the blips for the cells, time check and shop
---- @return nil
 local function CreateCellsBlip()
-	if CellsBlip then
+	if DoesBlipExist(CellsBlip) then
 		RemoveBlip(CellsBlip)
 	end
+
 	CellsBlip = AddBlipForCoord(Config.Locations["yard"].coords.x, Config.Locations["yard"].coords.y, Config.Locations["yard"].coords.z)
 
 	SetBlipSprite (CellsBlip, 238)
@@ -31,9 +31,10 @@ local function CreateCellsBlip()
 	AddTextComponentSubstringPlayerName(Lang:t("info.cells_blip"))
 	EndTextCommandSetBlipName(CellsBlip)
 
-	if TimeBlip then
+	if DoesBlipExist(TimeBlip) then
 		RemoveBlip(TimeBlip)
 	end
+
 	TimeBlip = AddBlipForCoord(Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z)
 
 	SetBlipSprite(TimeBlip, 466)
@@ -45,9 +46,10 @@ local function CreateCellsBlip()
 	AddTextComponentSubstringPlayerName(Lang:t("info.freedom_blip"))
 	EndTextCommandSetBlipName(TimeBlip)
 
-	if ShopBlip then
+	if DoesBlipExist(ShopBlip) then
 		RemoveBlip(ShopBlip)
 	end
+
 	ShopBlip = AddBlipForCoord(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z)
 
 	SetBlipSprite(ShopBlip, 52)
@@ -63,7 +65,7 @@ end
 -- Add clothes to prisioner
 
 local function ApplyClothes()
-	local playerPed = PlayerPedId()
+	local playerPed = cache.ped
 	if DoesEntityExist(playerPed) then
 		Citizen.CreateThread(function()
 			SetPedArmour(playerPed, 0)
@@ -81,7 +83,6 @@ local function ApplyClothes()
 	end
 end
 
-
 -- Events
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
@@ -91,20 +92,15 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 		end
 	end)
 
-	QBCore.Functions.TriggerCallback('prison:server:IsAlarmActive', function(active)
-		if active then
-			TriggerEvent('prison:client:JailAlarm', true)
-		end
+	lib.callback('prison:server:IsAlarmActive', false, function(active)
+		if not active then return end
+		TriggerEvent('prison:client:JailAlarm', true)
 	end)
 
 	if DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
 
 	local pedModel = `s_m_m_armoured_01`
-
-	RequestModel(pedModel)
-	while not HasModelLoaded(pedModel) do
-		Wait(0)
-	end
+	lib.requestModel(pedModel)
 
 	freedom_ped = CreatePed(0, pedModel, Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, Config.Locations["freedom"].coords.w, false, true)
 	FreezeEntityPosition(freedom_ped, true)
@@ -154,7 +150,7 @@ end)
 AddEventHandler('onResourceStart', function(resource)
     if resource ~= GetCurrentResourceName() then return end
 	Wait(100)
-	if LocalPlayer.state['isLoggedIn'] then
+	if LocalPlayer.state.isLoggedIn then
 		QBCore.Functions.GetPlayerData(function(PlayerData)
 			if PlayerData.metadata["injail"] > 0 then
 				TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
@@ -162,7 +158,7 @@ AddEventHandler('onResourceStart', function(resource)
 		end)
 	end
 
-	QBCore.Functions.TriggerCallback('prison:server:IsAlarmActive', function(active)
+	lib.callback('prison:server:IsAlarmActive', false, function(active)
 		if not active then return end
 		TriggerEvent('prison:client:JailAlarm', true)
 	end)
@@ -170,11 +166,7 @@ AddEventHandler('onResourceStart', function(resource)
 	if DoesEntityExist(canteen_ped) or DoesEntityExist(freedom_ped) then return end
 
 	local pedModel = `s_m_m_armoured_01`
-
-	RequestModel(pedModel)
-	while not HasModelLoaded(pedModel) do
-		Wait(0)
-	end
+	lib.requestModel(pedModel)
 
 	freedom_ped = CreatePed(0, pedModel, Config.Locations["freedom"].coords.x, Config.Locations["freedom"].coords.y, Config.Locations["freedom"].coords.z, Config.Locations["freedom"].coords.w, false, true)
 	FreezeEntityPosition(freedom_ped, true)
@@ -247,8 +239,8 @@ RegisterNetEvent('prison:client:Enter', function(time)
 		Wait(10)
 	end
 	local RandomStartPosition = Config.Locations.spawns[math.random(1, #Config.Locations.spawns)]
-	SetEntityCoords(PlayerPedId(), RandomStartPosition.coords.x, RandomStartPosition.coords.y, RandomStartPosition.coords.z - 0.9, 0, 0, 0, false)
-	SetEntityHeading(PlayerPedId(), RandomStartPosition.coords.w)
+	SetEntityCoords(cache.ped, RandomStartPosition.coords.x, RandomStartPosition.coords.y, RandomStartPosition.coords.z - 0.9, false, false, false, false)
+	SetEntityHeading(cache.ped, RandomStartPosition.coords.w)
 	Wait(500)
 	TriggerEvent('animations:client:EmoteCommandStart', {RandomStartPosition.animation})
 
@@ -287,7 +279,6 @@ RegisterNetEvent('prison:client:Leave', function()
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
-		CellsBlip = nil
 		RemoveBlip(TimeBlip)
 		TimeBlip = nil
 		RemoveBlip(ShopBlip)
@@ -298,8 +289,8 @@ RegisterNetEvent('prison:client:Leave', function()
 			Wait(10)
 		end
 		TriggerServerEvent('qb-clothes:loadPlayerSkin')
-		SetEntityCoords(PlayerPedId(), Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
-		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
+		SetEntityCoords(cache.ped, Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, false, false, false, false)
+		SetEntityHeading(cache.ped, Config.Locations["outside"].coords.w)
 
 		Wait(500)
 
@@ -319,19 +310,16 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
 		inJail = false
 		RemoveBlip(currentBlip)
 		RemoveBlip(CellsBlip)
-		CellsBlip = nil
 		RemoveBlip(TimeBlip)
-		TimeBlip = nil
 		RemoveBlip(ShopBlip)
-		ShopBlip = nil
 		QBCore.Functions.Notify(Lang:t("success.free_"))
 		DoScreenFadeOut(500)
 		while not IsScreenFadedOut() do
 			Wait(10)
 		end
 		TriggerServerEvent('qb-clothes:loadPlayerSkin')
-		SetEntityCoords(PlayerPedId(), Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, 0, 0, 0, false)
-		SetEntityHeading(PlayerPedId(), Config.Locations["outside"].coords.w)
+		SetEntityCoords(cache.ped, Config.Locations["outside"].coords.x, Config.Locations["outside"].coords.y, Config.Locations["outside"].coords.z, false, false, false, false)
+		SetEntityHeading(cache.ped, Config.Locations["outside"].coords.w)
 		Wait(500)
 		DoScreenFadeIn(1000)
 	end
