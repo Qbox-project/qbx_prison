@@ -190,7 +190,7 @@ All lua code should be done using all the best practices of proper lua using the
 - Use local varriables everywhere possible
 - Make use of config options where it makes sense making features optional or customizable
 - Instead of `table.insert(myTable, "Value")` use `myTable[#myTable + 1] = "Value"`
-- Instead of `table.insert(ages, "bob", 30)` use `ages["bob"] = 30`
+- Instead of `table.insert(ages, "bob", 30)` use `ages.bob = 30`
 
 
 ### JavaScript Styleguide

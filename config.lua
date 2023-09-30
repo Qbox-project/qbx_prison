@@ -20,7 +20,7 @@ if not isServer then
 end
 
 Config.Jobs = {
-    ["electrician"] = "Electrician"
+    electrician = "Electrician"
 }
 
 Config.Uniforms ={
@@ -46,7 +46,7 @@ Config.Uniforms ={
 
 Config.Locations = {
     jobs = {
-        ["electrician"] = {
+        electrician = {
             [1] = {
                 coords = vector4(1761.46, 2540.41, 45.56, 272.249),
             },
@@ -70,19 +70,19 @@ Config.Locations = {
             }
         }
     },
-    ["freedom"] = {
+    freedom = {
         coords = vector4(1740.88, 2476.57, 44.85, 299.49)
     },
-    ["outside"] = {
+    outside = {
         coords = vector4(1848.13, 2586.05, 44.67, 269.5)
     },
-    ["yard"] = {
+    yard = {
         coords = vector4(1765.67, 2565.91, 44.56, 1.5)
     },
-    ["middle"] = {
+    middle = {
         coords = vector4(1693.33, 2569.51, 44.55, 123.5)
     },
-    ["shop"] = {
+    shop = {
         coords = vector4(1777.59, 2560.52, 44.62, 187.83)
     },
     spawns = {
