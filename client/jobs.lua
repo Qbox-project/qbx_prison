@@ -1,5 +1,5 @@
 local currentLocation = 1
-currentBlip = 0
+CurrentBlip = 0
 local isWorking = false
 
 -- Functions
@@ -7,65 +7,65 @@ local isWorking = false
 --- This will create the blip for the current prison job and give a reward if they were done with the previous one
 --- @param noItem boolean | nil
 function CreateJobBlip(noItem) -- Used globally
-    if DoesBlipExist(currentBlip) then
-        RemoveBlip(currentBlip)
+    if DoesBlipExist(CurrentBlip) then
+        RemoveBlip(CurrentBlip)
     end
 
-    local coords = Config.Locations.jobs[currentJob][currentLocation].coords.xyz
-    currentBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
-    SetBlipSprite(currentBlip, 402)
-    SetBlipDisplay(currentBlip, 4)
-    SetBlipScale(currentBlip, 0.8)
-    SetBlipAsShortRange(currentBlip, true)
-    SetBlipColour(currentBlip, 1)
+    local coords = Config.Locations.jobs[CurrentJob][currentLocation].coords.xyz
+    CurrentBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
+    SetBlipSprite(CurrentBlip, 402)
+    SetBlipDisplay(CurrentBlip, 4)
+    SetBlipScale(CurrentBlip, 0.8)
+    SetBlipAsShortRange(CurrentBlip, true)
+    SetBlipColour(CurrentBlip, 1)
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentSubstringPlayerName(Lang:t("info.work_blip"))
-    EndTextCommandSetBlipName(currentBlip)
+    EndTextCommandSetBlipName(CurrentBlip)
     if noItem then return end
     TriggerServerEvent('prison:server:CheckChance')
 end
 
 --- This will check all job locations of the current job to check if they're done or not
 --- @return boolean
-local function CheckAllLocations()
+local function checkAllLocations()
     local amount = 0
-    for i = 1, #Config.Locations.jobs[currentJob] do
-        local current = Config.Locations.jobs[currentJob][i]
+    for i = 1, #Config.Locations.jobs[CurrentJob] do
+        local current = Config.Locations.jobs[CurrentJob][i]
         if current.done then
             amount += 1
         end
     end
-    return amount == #Config.Locations.jobs[currentJob]
+    return amount == #Config.Locations.jobs[CurrentJob]
 end
 
 --- This will reset all location of the current job
-local function ResetLocations()
-    for i = 1, #Config.Locations.jobs[currentJob] do
-        Config.Locations.jobs[currentJob][i].done = false
+local function resetLocations()
+    for i = 1, #Config.Locations.jobs[CurrentJob] do
+        Config.Locations.jobs[CurrentJob][i].done = false
     end
 end
 
 --- This will set the job as done and give a new location at the same time for you to continue the job and give you some time cut as a reward
-local function JobDone()
-    if not Config.Locations.jobs[currentJob][currentLocation].done then return end
+local function jobDone()
+    if not Config.Locations.jobs[CurrentJob][currentLocation].done then return end
     if math.random(1, 100) <= 50 then
         exports.qbx_core:Notify(Lang:t("success.time_cut"))
-        jailTime -= math.random(1, 2)
+        JailTime -= math.random(1, 2)
     end
-    if CheckAllLocations() then ResetLocations() end
-    local newLocation = math.random(1, #Config.Locations.jobs[currentJob])
-    while newLocation == currentLocation or Config.Locations.jobs[currentJob][newLocation].done do
+    if checkAllLocations() then resetLocations() end
+    local newLocation = math.random(1, #Config.Locations.jobs[CurrentJob])
+    while newLocation == currentLocation or Config.Locations.jobs[CurrentJob][newLocation].done do
         Wait(0)
-        newLocation = math.random(1, #Config.Locations.jobs[currentJob])
+        newLocation = math.random(1, #Config.Locations.jobs[CurrentJob])
     end
     currentLocation = newLocation
     CreateJobBlip()
 end
 
 --- This will be triggered once you interact with a job location to perform your job at
-local function StartWork()
+local function startWork()
     isWorking = true
-    Config.Locations.jobs[currentJob][currentLocation].done = true
+    Config.Locations.jobs[CurrentJob][currentLocation].done = true
     if lib.progressBar({
         duration = math.random(5000, 10000),
         label = Lang:t("info.working_electricity"),
@@ -83,7 +83,7 @@ local function StartWork()
             combat = true
         }
     }) then
-        JobDone()
+        jobDone()
     else
         exports.qbx_core:Notify(Lang:t("error.cancelled"), "error")
     end
@@ -112,10 +112,10 @@ CreateThread(function()
                             icon = 'fa-solid fa-bolt',
                             label = Lang:t("info.job_interaction_target", {job = Config.Jobs[k]}),
                             canInteract = function()
-                                return inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking and i == currentLocation
+                                return InJail and CurrentJob and not Config.Locations.jobs[k][i].done and not isWorking and i == currentLocation
                             end,
                             action = function()
-                                StartWork()
+                                startWork()
                             end
                         }
                     },
@@ -127,7 +127,7 @@ CreateThread(function()
                     debugPoly = false,
                 })
                 electricityzone:onPlayerInOut(function(isPointInside)
-                    isInside = isPointInside and inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
+                    isInside = isPointInside and InJail and CurrentJob and not Config.Locations.jobs[k][i].done and not isWorking
                     if isInside then
                         lib.showTextUI(Lang:t("info.job_interaction"))
                     else
@@ -144,7 +144,7 @@ CreateThread(function()
             if isInside then
                 sleep = 0
                 if IsControlJustReleased(0, 38) then
-                    StartWork()
+                    startWork()
                     sleep = 1000
                 end
             end
