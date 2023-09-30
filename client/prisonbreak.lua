@@ -144,7 +144,7 @@ CreateThread(function()
         currentGate = 0
         local sleep = 1000
         if LocalPlayer.state.isLoggedIn then
-            if QBX.PlayerData.PlayerJob.type ~= "leo" then
+            if QBX.PlayerData.job.type ~= "leo" then
                 local pos = GetEntityCoords(cache.ped)
                 for k in pairs(gates) do
                     local dist =  #(pos - gates[k].coords)
