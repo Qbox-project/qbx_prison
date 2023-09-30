@@ -80,32 +80,15 @@ local function applyClothes()
 	end)
 end
 
-local function checkIfAlarmIsActive()
+local function turnOnAlarmIfActive()
 	lib.callback('prison:server:IsAlarmActive', false, function(active)
 		if not active then return end
 		TriggerEvent('prison:client:JailAlarm', true)
 	end)
 end
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-	if QBX.PlayerData.metadata.injail > 0 then
-		TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
-	end
-
-	checkIfAlarmIsActive()
-end)
-
-AddEventHandler('onResourceStart', function(resource)
-    if resource ~= GetCurrentResourceName() then return end
-	Wait(100)
-	if LocalPlayer.state.isLoggedIn then
-		if QBX.PlayerData.metadata.injail > 0 then
-			TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
-		end
-	end
-
-	checkIfAlarmIsActive()
-	
+--- TODO: switch to ox_target
+local function spawnNPCsIfNotExisting()
 	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
 
 	local pedModel = `s_m_m_armoured_01`
@@ -154,6 +137,28 @@ AddEventHandler('onResourceStart', function(resource)
 		},
 		distance = 2.5,
 	})
+end
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+	if QBX.PlayerData.metadata.injail > 0 then
+		TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
+	end
+
+	turnOnAlarmIfActive()
+	spawnNPCsIfNotExisting()
+end)
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+	Wait(100)
+	if LocalPlayer.state.isLoggedIn then
+		if QBX.PlayerData.metadata.injail > 0 then
+			TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
+		end
+	end
+
+	turnOnAlarmIfActive()
+	spawnNPCsIfNotExisting()
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
