@@ -3,7 +3,6 @@ local requiredItemsShowed = false
 local requiredItems = {}
 local inRange = false
 local securityLockdown = false
-local PlayerJob = {}
 local Gates = {
     [1] = {
         gatekey = 13,
@@ -30,44 +29,11 @@ local function OnHackDone(success)
     Config.OnHackDone(success, currentGate, Gates[currentGate])
 end
 
---- This will draw 3d text at the given location with the given text
---- @param x number
---- @param y number
---- @param z number
---- @param text string
-local function DrawText3D(x, y, z, text)
-    SetTextScale(0.35, 0.35)
-    SetTextFont(4)
-    SetTextProportional(true)
-    SetTextColour(255, 255, 255, 215)
-    BeginTextCommandDisplayText("STRING")
-    SetTextCentre(true)
-    AddTextComponentSubstringPlayerName(text)
-    SetDrawOrigin(x,y,z, 0)
-    EndTextCommandDisplayText(0.0, 0.0)
-    local factor = (string.len(text)) / 370
-    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
-    ClearDrawOrigin()
-end
-
 -- Events
-
-AddEventHandler('onResourceStart', function(resource)
-    if resource ~= GetCurrentResourceName() or not LocalPlayer.state['isLoggedIn'] then return end
-    PlayerJob = QBCore.Functions.GetPlayerData().job
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerJob = QBCore.Functions.GetPlayerData().job
-end)
-
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerJob = JobInfo
-end)
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
     if currentGate ~= 0 and not securityLockdown and not Gates[currentGate].hit then
-        local hasItem = QBCore.Functions.HasItem("gatecrack")
+        local hasItem = exports.qbx_core:HasItem("gatecrack")
         if hasItem then
             TriggerEvent('inventory:client:requiredItems', requiredItems, false)
             if lib.progressBar({
@@ -90,12 +56,12 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
                 TriggerEvent("mhacking:show")
                 TriggerEvent("mhacking:start", math.random(5, 9), math.random(10, 18), OnHackDone)
             else
-                QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
+                exports.qbx_core:Notify(Lang:t("error.cancelled"), "error")
             end
 
             StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
         else
-            QBCore.Functions.Notify(Lang:t("error.item_missing"), "error")
+            exports.qbx_core:Notify(Lang:t("error.item_missing"), "error")
         end
     end
 end)
@@ -170,15 +136,15 @@ end)
 CreateThread(function()
     Wait(500)
     requiredItems = {
-        [1] = {name = QBCore.Shared.Items["electronickit"]["name"], image = QBCore.Shared.Items["electronickit"]["image"]},
-        [2] = {name = QBCore.Shared.Items["gatecrack"]["name"], image = QBCore.Shared.Items["gatecrack"]["image"]},
+        [1] = {name = exports.ox_inventory:Items()["electronickit"]["name"], image = exports.ox_inventory:Items()["electronickit"]["image"]},
+        [2] = {name = exports.ox_inventory:Items()["gatecrack"]["name"], image = exports.ox_inventory:Items()["gatecrack"]["image"]},
     }
     while true do
         inRange = false
         currentGate = 0
         local sleep = 1000
         if LocalPlayer.state.isLoggedIn then
-            if PlayerJob.name ~= "police" then
+            if QBX.PlayerData.PlayerJob.type ~= "leo" then
                 local pos = GetEntityCoords(cache.ped)
                 for k in pairs(Gates) do
                     local dist =  #(pos - Gates[k].coords)
@@ -187,10 +153,10 @@ CreateThread(function()
                         inRange = true
                         if securityLockdown then
                             sleep = 0
-                            DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, "~r~SYSTEM LOCKDOWN")
+                            DrawText3D(Gates[k].coords, "~r~SYSTEM LOCKDOWN")
                         elseif Gates[k].hit then
                             sleep = 0
-                            DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, "SYSTEM BREACH")
+                            DrawText3D(Gates[k].coords, "SYSTEM BREACH")
                         elseif not requiredItemsShowed then
                             requiredItemsShowed = true
                             TriggerEvent('inventory:client:requiredItems', requiredItems, true)
@@ -224,7 +190,7 @@ CreateThread(function()
             TriggerEvent("prison:client:PrisonBreakAlert")
             TriggerServerEvent("prison:server:SetJailStatus", 0)
             TriggerServerEvent("prison:server:GiveJailItems", true)
-            QBCore.Functions.Notify(Lang:t("error.escaped"), "error")
+            exports.qbx_core:Notify(Lang:t("error.escaped"), "error")
         end
         Wait(1000)
     end

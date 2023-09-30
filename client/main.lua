@@ -1,4 +1,3 @@
-QBCore = exports['qbx-core']:GetCoreObject() -- Used Globally
 inJail = false
 jailTime = 0
 currentJob = nil
@@ -73,8 +72,7 @@ local function ApplyClothes()
 			ResetPedVisibleDamage(playerPed)
 			ClearPedLastWeaponDamage(playerPed)
 			ResetPedMovementClipset(playerPed, 0)
-			local gender = QBCore.Functions.GetPlayerData().charinfo.gender
-			if gender == 0 then
+			if QBX.PlayerData.charinfo.gender == 0 then
 				TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.male)
 			else
 				TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.female)
@@ -86,11 +84,9 @@ end
 -- Events
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-	QBCore.Functions.GetPlayerData(function(PlayerData)
-		if PlayerData.metadata["injail"] > 0 then
-			TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
-		end
-	end)
+	if QBX.PlayerData.metadata.injail > 0 then
+		TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
+	end
 
 	lib.callback('prison:server:IsAlarmActive', false, function(active)
 		if not active then return end
@@ -151,11 +147,9 @@ AddEventHandler('onResourceStart', function(resource)
     if resource ~= GetCurrentResourceName() then return end
 	Wait(100)
 	if LocalPlayer.state.isLoggedIn then
-		QBCore.Functions.GetPlayerData(function(PlayerData)
-			if PlayerData.metadata["injail"] > 0 then
-				TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
-			end
-		end)
+		if QBX.PlayerData.metadata.injail > 0 then
+			TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
+		end
 	end
 
 	lib.callback('prison:server:IsAlarmActive', false, function(active)
@@ -219,15 +213,9 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 	RemoveBlip(currentBlip)
 end)
 
-RegisterNetEvent('prison:client:Enter', function(time)
-	local invokingResource = GetInvokingResource()
-	if invokingResource and invokingResource ~= 'qb-policejob' and invokingResource ~= 'qb-ambulancejob' and invokingResource ~= GetCurrentResourceName() then
-		-- Use QBCore.Debug here for a quick and easy way to print to the console to grab your attention with this message
-		QBCore.Debug({('Player with source %s tried to execute prison:client:Enter manually or from another resource which is not authorized to call this, invokedResource: %s'):format(GetPlayerServerId(PlayerId()), invokingResource)})
-		return
-	end
-
-	QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
+--- TODO: make this an export
+AddEventHandler('prison:client:Enter', function(time)
+	exports.qbx_core:Notify( Lang:t("error.injail", {Time = time}), "error")
 
 	TriggerEvent("chat:addMessage", {
 		color = {3, 132, 252},
@@ -261,12 +249,12 @@ RegisterNetEvent('prison:client:Enter', function(time)
 	CreateCellsBlip()
 	Wait(2000)
 	DoScreenFadeIn(1000)
-	QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
+	exports.qbx_core:Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
 end)
 
 RegisterNetEvent('prison:client:Leave', function()
 	if jailTime > 0 then
-		QBCore.Functions.Notify( Lang:t("info.timeleft", {JAILTIME = jailTime}))
+		exports.qbx_core:Notify( Lang:t("info.timeleft", {JAILTIME = jailTime}))
 	else
 		jailTime = 0
 		TriggerServerEvent("prison:server:SetJailStatus", 0)
@@ -283,7 +271,7 @@ RegisterNetEvent('prison:client:Leave', function()
 		TimeBlip = nil
 		RemoveBlip(ShopBlip)
 		ShopBlip = nil
-		QBCore.Functions.Notify(Lang:t("success.free_"))
+		exports.qbx_core:Notify(Lang:t("success.free_"))
 		DoScreenFadeOut(500)
 		while not IsScreenFadedOut() do
 			Wait(10)
@@ -312,7 +300,7 @@ RegisterNetEvent('prison:client:UnjailPerson', function()
 		RemoveBlip(CellsBlip)
 		RemoveBlip(TimeBlip)
 		RemoveBlip(ShopBlip)
-		QBCore.Functions.Notify(Lang:t("success.free_"))
+		exports.qbx_core:Notify(Lang:t("success.free_"))
 		DoScreenFadeOut(500)
 		while not IsScreenFadedOut() do
 			Wait(10)
@@ -346,7 +334,7 @@ CreateThread(function()
 				jailTime -= 1
 				if jailTime <= 0 then
 					jailTime = 0
-					QBCore.Functions.Notify(Lang:t("success.timesup"), "success", 10000)
+					exports.qbx_core:Notify(Lang:t("success.timesup"), "success", 10000)
 				end
 				TriggerServerEvent("prison:server:SetJailStatus", jailTime)
 			end
@@ -367,17 +355,16 @@ CreateThread(function()
 				CreateThread(function()
 					while insidefreedom do
 						if IsControlJustReleased(0, 38) then
-							exports['qbx-core']:KeyPressed()
-							exports['qbx-core']:HideText()
+							lib.hideTextUI()
 							TriggerEvent("prison:client:Leave")
 							break
 						end
 						Wait(0)
 					end
 				end)
-				exports['qbx-core']:DrawText('[E] Check Time', 'left')
+				lib.showTextUI('[E] Check Time')
 			else
-				exports['qbx-core']:HideText()
+				lib.hideTextUI()
 			end
 		end)
 		canteen = BoxZone:Create(vector3(Config.Locations["shop"].coords.x, Config.Locations["shop"].coords.y, Config.Locations["shop"].coords.z), 2.75, 7.75, {
@@ -390,17 +377,16 @@ CreateThread(function()
 				CreateThread(function()
 					while insidecanteen do
 						if IsControlJustReleased(0, 38) then
-							exports['qbx-core']:KeyPressed()
-							exports['qbx-core']:HideText()
+							lib.hideTextUI()
 							TriggerEvent("prison:client:canteen")
 							break
 						end
 						Wait(0)
 					end
 				end)
-				exports['qbx-core']:DrawText('[E] Open Canteen', 'left')
+				lib.showTextUI('[E] Open Canteen')
 			else
-				exports['qbx-core']:HideText()
+				lib.hideTextUI()
 			end
 		end)
 	end

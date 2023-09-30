@@ -61,7 +61,7 @@ Before creating bug reports, please check [this list](#before-submitting-a-bug-r
 
 * **Check the docs** There's a chance what you see as a bug might just work differently than you expect and if you think it could work better consider a feature enhancement report instead.
 * **Search the [discord](https://discord.gg/Z6Whda5hHA)** to see if anyone else has run into the issue and see if it was solved through user error or code changes. (if the code change isn't pending a PR and you know what you're doing consider submitting one following [Pull Requests](#pull-requests) )
-* **Determine which resource the problem should be reported in**. If the bug is related to the inventory for example report this bug under qb-inventory rather than under qb-core or some other resource.
+* **Determine which resource the problem should be reported in**. If the bug is related to the inventory for example report this bug under qb-inventory rather than under qbx_core or some other resource.
 * **Perform a [cursory search](https://github.com/search?q=is%3Aissue+user%3Aqbox-project)** to see if the problem has already been reported. If it has **and the issue is still open**, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Bug Report?
@@ -104,7 +104,7 @@ Before creating enhancement suggestions, please check [this list](#before-submit
 
 * **Make sure it doesn't already exist.** Sounds silly, but there's a lot of features built in to Qbox that people don't realize so take a look through the docs and stuff to make sure it's not already there.
 * **Check if there's already PR which provides that enhancement.**
-* **Determine which resource the enhancement should be suggested in.** Whichever resource the suggestion is about, is where it should go. If the suggestion is about Qbox as a whole, make the suggestion in the qbx-core repository.
+* **Determine which resource the enhancement should be suggested in.** Whichever resource the suggestion is about, is where it should go. If the suggestion is about Qbox as a whole, make the suggestion in the qbx_core repository.
 * **Perform a [cursory search](https://github.com/search?q=is%3Aissue+user%3Aqbox-project++&type=issues&state=open)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?

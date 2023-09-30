@@ -49,7 +49,7 @@ end
 local function JobDone()
     if not Config.Locations.jobs[currentJob][currentLocation].done then return end
     if math.random(1, 100) <= 50 then
-        QBCore.Functions.Notify(Lang:t("success.time_cut"))
+        exports.qbx_core:Notify(Lang:t("success.time_cut"))
         jailTime -= math.random(1, 2)
     end
     if CheckAllLocations() then ResetLocations() end
@@ -85,7 +85,7 @@ local function StartWork()
     }) then
         JobDone()
     else
-        QBCore.Functions.Notify(Lang:t("error.cancelled"), "error")
+        exports.qbx_core:Notify(Lang:t("error.cancelled"), "error")
     end
 
     isWorking = false
@@ -129,9 +129,9 @@ CreateThread(function()
                 electricityzone:onPlayerInOut(function(isPointInside)
                     isInside = isPointInside and inJail and currentJob and not Config.Locations.jobs[k][i].done and not isWorking
                     if isInside then
-                        exports['qbx-core']:DrawText(Lang:t("info.job_interaction"), 'left')
+                        lib.showTextUI(Lang:t("info.job_interaction"))
                     else
-                        exports['qbx-core']:HideText()
+                        lib.hideTextUI()
                     end
                 end)
             end
