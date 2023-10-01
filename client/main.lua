@@ -201,7 +201,7 @@ local function onEnter(minutes)
 end
 
 RegisterNetEvent('qbx_prison:client:playerJailed', function(minutes)
-	if source == '' then return end
+	if GetInvokingResource() then return end
 	onEnter(minutes)
 end)
 
@@ -226,7 +226,7 @@ local function release()
 end
 
 RegisterNetEvent('qbx_prison:client:playerReleased', function()
-	if source == '' then return end
+	if GetInvokingResource() then return end
 	release()
 end)
 
