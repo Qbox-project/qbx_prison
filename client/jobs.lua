@@ -95,7 +95,6 @@ end
 -- Threads
 
 CreateThread(function()
-    local isInside = false
     for k in pairs(Config.Locations.jobs) do
         for i = 1, #Config.Locations.jobs[k] do
             local current = Config.Locations.jobs[k][i]
@@ -115,33 +114,24 @@ CreateThread(function()
                     }
                 })
             else
-                local electricityzone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {
-                    name = "work_"..k.."_"..i,
-                    debugPoly = false,
-                })
-                electricityzone:onPlayerInOut(function(isPointInside)
-                    isInside = isPointInside and InJail and CurrentJob and not Config.Locations.jobs[k][i].done and not isWorking
-                    if isInside then
+                lib.zones.box({
+                    coords = current.coords.xyz,
+                    size = vec3(3, 5, 3),
+                    onEnter = function()
                         lib.showTextUI(Lang:t("info.job_interaction"))
-                    else
+                    end,
+                    onExit = function()
                         lib.hideTextUI()
-                    end
-                end)
+                    end,
+                    inside = function()
+                        if not InJail or not CurrentJob or isWorking or Config.Locations.jobs[k][i].done then return end
+                        if IsControlJustReleased(0, 38) then
+                            startWork()
+                        end
+                    end,
+                })
             end
             Config.Locations.jobs[k][i].done = false
-        end
-    end
-    if not Config.UseTarget then
-        while true do
-            local sleep = 1000
-            if isInside then
-                sleep = 0
-                if IsControlJustReleased(0, 38) then
-                    startWork()
-                    sleep = 1000
-                end
-            end
-            Wait(sleep)
         end
     end
 end)
