@@ -100,13 +100,9 @@ CreateThread(function()
         for i = 1, #Config.Locations.jobs[k] do
             local current = Config.Locations.jobs[k][i]
             if Config.UseTarget then
-                exports['qb-target']:AddBoxZone("work_"..k.."_"..i, current.coords.xyz, 1.5, 1.6, {
-                    name = "work_"..k.."_"..i,
-                    heading = 12.0,
-                    debugPoly = false,
-                    minZ = 19,
-                    maxZ = 219
-                }, {
+                exports.ox_target:addBoxZone({
+                    coords = current.coords.xyz,
+                    size = vec3(1.5, 1.6, 5),
                     options = {
                         {
                             icon = 'fa-solid fa-bolt',
@@ -114,12 +110,9 @@ CreateThread(function()
                             canInteract = function()
                                 return InJail and CurrentJob and not Config.Locations.jobs[k][i].done and not isWorking and i == currentLocation
                             end,
-                            action = function()
-                                startWork()
-                            end
+                            onSelect = startWork
                         }
-                    },
-                    distance = 2.5
+                    }
                 })
             else
                 local electricityzone = BoxZone:Create(current.coords.xyz, 3.0, 5.0, {

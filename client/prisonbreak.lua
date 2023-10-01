@@ -78,7 +78,7 @@ RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
 end)
 
 RegisterNetEvent('prison:client:PrisonBreakAlert', function()
-    local coords = Config.Locations.middle.coords.xyz
+    local coords = Config.Locations.middle.coords
     local alertData = {title = Lang:t("info.police_alert_title"), coords = {x = coords.x, y = coords.y, z = coords.z}, description = Lang:t("info.police_alert_description")}
     TriggerEvent("qb-phone:client:addPoliceAlert", alertData)
     TriggerEvent('police:client:policeAlert', coords, Lang:t("info.police_alert_description"))
@@ -177,22 +177,21 @@ CreateThread(function()
     end
 end)
 
---- TODO: switch to using a zone
---- check for an escape
-CreateThread(function()
-    while true do
-        local pos = GetEntityCoords(cache.ped, true)
-        if #(pos.xy - Config.Locations.middle.coords.xy) > 200 and InJail then
-            InJail = false
-            JailTime = 0
-            RemoveBlip(CurrentBlip)
-            RemoveBlip(CellsBlip)
-            RemoveBlip(TimeBlip)
-            RemoveBlip(ShopBlip)
-            TriggerEvent("prison:client:PrisonBreakAlert")
-            exports.qbx_core:Notify(Lang:t("error.escaped"), "error")
-            TriggerServerEvent('qbx_prison:server:playerEscaped')
-        end
-        Wait(1000)
-    end
-end)
+local function checkForEscape()
+    if not InJail then return end
+    InJail = false
+    JailTime = 0
+    RemoveBlip(CurrentBlip)
+    RemoveBlip(CellsBlip)
+    RemoveBlip(TimeBlip)
+    RemoveBlip(ShopBlip)
+    TriggerEvent("prison:client:PrisonBreakAlert")
+    exports.qbx_core:Notify(Lang:t("error.escaped"), "error")
+    TriggerServerEvent('qbx_prison:server:playerEscaped')
+end
+
+lib.zones.sphere({
+    coords = Config.Locations.middle.coords,
+    radius = 200,
+    onExit = checkForEscape,
+})
