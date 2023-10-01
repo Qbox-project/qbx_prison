@@ -189,11 +189,9 @@ CreateThread(function()
             RemoveBlip(CellsBlip)
             RemoveBlip(TimeBlip)
             RemoveBlip(ShopBlip)
-            TriggerServerEvent("prison:server:SecurityLockdown")
             TriggerEvent("prison:client:PrisonBreakAlert")
-            TriggerServerEvent("prison:server:SetJailStatus", 0)
-            TriggerServerEvent("prison:server:GiveJailItems", true)
             exports.qbx_core:Notify(Lang:t("error.escaped"), "error")
+            TriggerServerEvent('qbx_prison:server:playerEscaped')
         end
         Wait(1000)
     end

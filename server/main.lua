@@ -1,8 +1,7 @@
 local gotItems = {}
 local alarmActivated = false
 
-RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
-    local src = source
+local function setJailStatus(src, jailTime)
     local player = exports.qbx_core:GetPlayer(src)
     if not player then return end
     player.Functions.SetMetaData("injail", jailTime)
@@ -12,42 +11,36 @@ RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
             TriggerClientEvent('QBCore:Notify', src, Lang:t("info.lost_job"))
         end
     else
-        gotItems[source] = nil
+        gotItems[src] = nil
     end
+end
+
+RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
+    setJailStatus(source, jailTime)
 end)
 
-RegisterNetEvent('prison:server:SaveJailItems', function()
-    local src = source
-    local player = exports.qbx_core:GetPlayer(src)
-    if not player then return end
-    if not player.PlayerData.metadata.jailitems or table.type(player.PlayerData.metadata.jailitems) == "empty" then
-        player.Functions.SetMetaData("jailitems", player.PlayerData.items)
-        player.Functions.AddMoney('cash', 80)
-        Wait(2000)
-        player.Functions.ClearInventory()
-    end
-end)
+local function jailPlayer(src, minutes)
+    exports.qbx_core:Notify(src, Lang:t("error.injail", {Time = minutes}))
+    exports.qbx_core:Notify(src, Lang:t("info.seized_property"))
+    exports.ox_inventory:ConfiscateInventory(src)
 
-RegisterNetEvent('prison:server:GiveJailItems', function(escaped)
-    local src = source
     local player = exports.qbx_core:GetPlayer(src)
-    if not player then return end
-    if escaped then
-        player.Functions.SetMetaData("jailitems", {})
-        return
-    end
-    for _, v in pairs(player.PlayerData.metadata.jailitems) do
-        player.Functions.AddItem(v.name, v.amount, false, v.info)
-    end
-    player.Functions.SetMetaData("jailitems", {})
-end)
+    player.Functions.AddMoney('cash', 80)
 
-RegisterNetEvent('prison:server:ResetJailItems', function()
-    local src = source
-    local player = exports.qbx_core:GetPlayer(src)
-    if not player then return end
-    player.Functions.SetMetaData("jailitems", {})
-end)
+    setJailStatus(src, minutes)
+    TriggerClientEvent('qbx_prison:client:playerJailed', src)
+end
+
+exports('JailPlayer', jailPlayer)
+
+local function releasePlayer(src)
+    setJailStatus(src, 0)
+    exports.ox_inventory:ReturnInventory(src)
+    exports.qbx_core:Notify(src, Lang:t("info.received_property"))
+    TriggerClientEvent('qbx_prison:client:playerReleased', src)
+end
+
+exports('ReleasePlayer', releasePlayer)
 
 local function securityLockdown()
     TriggerClientEvent("prison:client:SetLockDown", -1, true)
@@ -58,7 +51,10 @@ local function securityLockdown()
 	end
 end
 
-RegisterNetEvent('prison:server:SecurityLockdown', securityLockdown)
+RegisterNetEvent('qbx_prison:server:playerEscaped', function()
+    securityLockdown()
+    setJailStatus(source, 0)
+end)
 
 local function setGateHit(key)
     TriggerClientEvent("prison:client:SetGateHit", -1, key, true)
@@ -71,12 +67,6 @@ local function setGateHit(key)
     end
 end
 
----@deprecated No replacement. If valid use case, contact Qbox team to request an export or event be exposed
-RegisterNetEvent('prison:server:SetGateHit', function(key)
-    lib.print.warn(GetInvokingResource(), " invoked deprecated event prison:server:SetGateHit")
-    setGateHit(key)
-end)
-
 RegisterNetEvent('qbx_prison:server:onGateHackDone', function(success, currentGate, gateKey)
     if source == '' then return end
     if success then
@@ -86,7 +76,6 @@ RegisterNetEvent('qbx_prison:server:onGateHackDone', function(success, currentGa
         securityLockdown()
     end
 end)
-    
 
 RegisterNetEvent('prison:server:JailAlarm', function()
     if alarmActivated then return end
@@ -119,4 +108,25 @@ end)
 
 lib.callback.register('prison:server:IsAlarmActive', function()
     return alarmActivated
+end)
+
+---@deprecated do not call this event
+RegisterNetEvent('prison:server:SaveJailItems', function()
+    lib.print.error(GetInvokingResource(), "invoked deprecated prison:server:SaveJailedItems event. Event has no effect.")
+end)
+
+---@deprecated do not call this event
+RegisterNetEvent('prison:server:GiveJailItems', function()
+    lib.print.error(GetInvokingResource(), "invoked deprecated prison:server:GiveJailItems event. Event has no effect.")
+end)
+
+---@deprecated No replacement. If valid use case, contact Qbox team to request an export or event be exposed
+RegisterNetEvent('prison:server:SetGateHit', function(key)
+    lib.print.warn(GetInvokingResource(), "invoked deprecated event prison:server:SetGateHit")
+    setGateHit(key)
+end)
+
+---@deprecated Do not call this event
+RegisterNetEvent('prison:server:SecurityLockdown', function()
+    lib.print.error(GetInvokingResource(), "invoked prison:server:SecurityLockdown event. Event has no effect.")
 end)

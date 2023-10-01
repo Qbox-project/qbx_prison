@@ -139,9 +139,26 @@ local function spawnNPCsIfNotExisting()
 	})
 end
 
+local function initPrison(time)
+	InJail = true
+	InJail = true
+	JailTime = time
+	local tempJobs = {}
+	local i = 1
+	for k in pairs(Config.Locations.jobs) do
+		tempJobs[i] = k
+		i += 1
+	end
+	CurrentJob = tempJobs[math.random(1, #tempJobs)]
+	CreateJobBlip(true)
+	applyClothes()
+	createCellsBlip()
+	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
+end
+
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	if QBX.PlayerData.metadata.injail > 0 then
-		TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
+		initPrison(QBX.PlayerData.metadata.injail)
 	end
 
 	turnOnAlarmIfActive()
@@ -153,7 +170,7 @@ AddEventHandler('onResourceStart', function(resource)
 	Wait(100)
 	if LocalPlayer.state.isLoggedIn then
 		if QBX.PlayerData.metadata.injail > 0 then
-			TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
+			initPrison(QBX.PlayerData.metadata.injail)
 		end
 	end
 
@@ -167,16 +184,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 	RemoveBlip(CurrentBlip)
 end)
 
---- TODO: make this an export
-AddEventHandler('prison:client:Enter', function(time)
-	exports.qbx_core:Notify( Lang:t("error.injail", {Time = time}), "error")
-
-	--- TODO: should this be a notification?
-	TriggerEvent("chat:addMessage", {
-		color = {3, 132, 252},
-		multiline = true,
-		args = {"SYSTEM", Lang:t("info.seized_property")}
-	})
+local function onEnter(minutes)
 	DoScreenFadeOut(500)
 	while not IsScreenFadedOut() do
 		Wait(10)
@@ -186,36 +194,19 @@ AddEventHandler('prison:client:Enter', function(time)
 	SetEntityHeading(cache.ped, randomStartPosition.coords.w)
 	Wait(500)
 	TriggerEvent('animations:client:EmoteCommandStart', {randomStartPosition.animation})
-
-	InJail = true
-	JailTime = time
-	local tempJobs = {}
-	local i = 1
-	for k in pairs(Config.Locations.jobs) do
-		tempJobs[i] = k
-		i += 1
-	end
-	CurrentJob = tempJobs[math.random(1, #tempJobs)]
-	CreateJobBlip(true)
-	applyClothes()
-	TriggerServerEvent("prison:server:SetJailStatus", JailTime)
-	TriggerServerEvent("prison:server:SaveJailItems", JailTime)
-	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
-	createCellsBlip()
+	initPrison(minutes)
 	Wait(2000)
 	DoScreenFadeIn(1000)
 	exports.qbx_core:Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[CurrentJob] }), "error")
+end
+
+RegisterNetEvent('qbx_prison:client:playerJailed', function(minutes)
+	if source == '' then return end
+	onEnter(minutes)
 end)
 
 local function release()
 	JailTime = 0
-	TriggerServerEvent("prison:server:SetJailStatus", 0)
-	TriggerServerEvent("prison:server:GiveJailItems")
-	TriggerEvent("chat:addMessage", {
-		color = {3, 132, 252},
-		multiline = true,
-		args = {"SYSTEM", Lang:t("info.received_property")}
-	})
 	InJail = false
 	RemoveBlip(CurrentBlip)
 	RemoveBlip(CellsBlip)
@@ -234,17 +225,18 @@ local function release()
 	DoScreenFadeIn(1000)
 end
 
-RegisterNetEvent('prison:client:Leave', function()
+RegisterNetEvent('qbx_prison:client:playerReleased', function()
+	if source == '' then return end
+	release()
+end)
+
+--- TODO: make a local function
+AddEventHandler('prison:client:Leave', function()
 	if JailTime > 0 then
 		exports.qbx_core:Notify( Lang:t("info.timeleft", {JAILTIME = JailTime}))
 	else
 		release()
 	end
-end)
-
-RegisterNetEvent('prison:client:UnjailPerson', function()
-	if JailTime == 0 then return end
-	release()
 end)
 
 RegisterNetEvent('prison:client:canteen',function()
@@ -324,4 +316,14 @@ CreateThread(function()
 			end
 		end)
 	end
+end)
+
+---@deprecated call server export JailPlayer instead
+AddEventHandler('prison:client:Enter', function()
+	lib.print.error(GetInvokingResource(), "invoked deprecated event prison:client:Enter. Call server export JailPlayer instead.")
+end)
+
+---@deprecated call server export ReleasePlayer instead
+RegisterNetEvent('prison:client:UnjailPerson', function()
+	lib.print.error(GetInvokingResource(), "invoked deprecated prison:client:UnjailPerson event. Call server export ReleasePlayer instead.")
 end)
