@@ -4,12 +4,8 @@ CurrentJob = nil
 CellsBlip = 0
 TimeBlip = 0
 ShopBlip = 0
-local insideCanteen = false
-local insideFreedom = false
 local canteenPed = 0
 local freedomPed = 0
-local freedom
-local canteen
 
 -- Functions
 
@@ -256,54 +252,49 @@ CreateThread(function()
 	end
 end)
 
-CreateThread(function()
-	if not Config.UseTarget then
-		freedom = BoxZone:Create(Config.Locations.freedom.coords.xyz, 2.75, 2.75, {
-			name="freedom",
-			debugPoly = false,
-		})
-		freedom:onPlayerInOut(function(isPointInside)
-			insideFreedom = isPointInside
-			if isPointInside then
-				CreateThread(function()
-					while insideFreedom do
-						if IsControlJustReleased(0, 38) then
-							lib.hideTextUI()
-							askToLeave()
-							break
-						end
-						Wait(0)
-					end
-				end)
-				lib.showTextUI('[E] Check Time')
-			else
-				lib.hideTextUI()
-			end
-		end)
-		canteen = BoxZone:Create(Config.Locations.shop.coords.xyz, 2.75, 7.75, {
-			name="canteen",
-			debugPoly = false,
-		})
-		canteen:onPlayerInOut(function(isPointInside)
-			insideCanteen = isPointInside
-			if isPointInside then
-				CreateThread(function()
-					while insideCanteen do
-						if IsControlJustReleased(0, 38) then
-							lib.hideTextUI()
-							openCanteen()
-							break
-						end
-						Wait(0)
-					end
-				end)
-				lib.showTextUI('[E] Open Canteen')
-			else
-				lib.hideTextUI()
-			end
-		end)
+
+
+if not Config.UseTarget then
+
+	local function listenForKeyPressToLeave()
+		if IsControlJustReleased(0, 38) then
+			lib.hideTextUI()
+			askToLeave()
+		end
 	end
-end)
+
+	local function listenForKeyPressToOpenCanteen()
+		if IsControlJustReleased(0, 38) then
+			lib.hideTextUI()
+			openCanteen()
+		end
+	end
+
+	CreateThread(function()
+		lib.zones.sphere({
+			coords = Config.Locations.freedom.coords.xyz,
+			radius = 2.75,
+			onEnter = function()
+				lib.showTextUI('[E] Check Time')
+			end,
+			onExit = function()
+				lib.hideTextUI()
+			end,
+			inside = listenForKeyPressToLeave,
+		})
+		lib.zones.sphere({
+			coords = Config.Locations.shop.coords.xyz,
+			radius = 2.75,
+			onEnter = function()
+				lib.showTextUI('[E] Open Canteen')
+			end,
+			onExit = function()
+				lib.hideTextUI()
+			end,
+			inside = listenForKeyPressToOpenCanteen,
+		})
+	end)
+end
 
 ---@deprecated call server export JailPlayer instead
 AddEventHandler('prison:client:Enter', function()
