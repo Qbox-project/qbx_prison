@@ -49,70 +49,68 @@ RegisterNetEvent('prison:server:ResetJailItems', function()
     player.Functions.SetMetaData("jailitems", {})
 end)
 
-RegisterNetEvent('prison:server:SecurityLockdown', function()
+local function securityLockdown()
     TriggerClientEvent("prison:client:SetLockDown", -1, true)
-    for _, v in pairs(exports.qbx_core:GetPlayers()) do
-        local player = exports.qbx_core:GetPlayer(v)
-        if player then
-            if player.PlayerData.job.name == "police" and player.PlayerData.job.onduty then
-                TriggerClientEvent("prison:client:PrisonBreakAlert", v)
-            end
+    for _, player in pairs(exports.qbx_core:GetQBPlayers()) do
+        if player.PlayerData.job.type == "leo" and player.PlayerData.job.onduty then
+            TriggerClientEvent("prison:client:PrisonBreakAlert", player.PlayerData.source)
         end
 	end
-end)
+end
 
-RegisterNetEvent('prison:server:SetGateHit', function(key)
+RegisterNetEvent('prison:server:SecurityLockdown', securityLockdown)
+
+local function setGateHit(key)
     TriggerClientEvent("prison:client:SetGateHit", -1, key, true)
     if math.random(1, 100) <= 50 then
-        for _, v in pairs(exports.qbx_core:GetPlayers()) do
-            local player = exports.qbx_core:GetPlayer(v)
-            if player then
-                if player.PlayerData.job.type == "leo" and player.PlayerData.job.onduty then
-                    TriggerClientEvent("prison:client:PrisonBreakAlert", v)
-                end
+        for _, player in pairs(exports.qbx_core:GetQBPlayers()) do
+            if player.PlayerData.job.type == "leo" and player.PlayerData.job.onduty then
+                TriggerClientEvent("prison:client:PrisonBreakAlert", player.PlayerData.source)
             end
         end
     end
+end
+
+---@deprecated No replacement. If valid use case, contact Qbox team to request an export or event be exposed
+RegisterNetEvent('prison:server:SetGateHit', function(key)
+    lib.print.warn(GetInvokingResource(), " invoked deprecated event prison:server:SetGateHit")
+    setGateHit(key)
 end)
 
-RegisterNetEvent('prison:server:CheckRecordStatus', function()
-    local src = source
-    local player = exports.qbx_core:GetPlayer(src)
-    if not player then return end
-    local criminalRecord = player.PlayerData.metadata.criminalrecord
-    local currentDate = os.date("*t")
-
-    if (criminalRecord.date.month + 1) == 13 then
-        criminalRecord.date.month = 0
-    end
-
-    if criminalRecord.hasRecord then
-        if currentDate.month == (criminalRecord.date.month + 1) or currentDate.day == (criminalRecord.date.day - 1) then
-            criminalRecord.hasRecord = false
-            criminalRecord.date = nil
-        end
+RegisterNetEvent('qbx_prison:server:onGateHackDone', function(success, currentGate, gateKey)
+    if source == '' then return end
+    if success then
+        setGateHit(currentGate)
+        exports.ox_doorlock:setDoorState(gateKey, 0)
+    else
+        securityLockdown()
     end
 end)
+    
 
 RegisterNetEvent('prison:server:JailAlarm', function()
     if alarmActivated then return end
     local playerPed = GetPlayerPed(source)
     local coords = GetEntityCoords(playerPed)
-    local middle = vec2(Config.Locations.middle.coords.x, Config.Locations.middle.coords.y)
-    if #(coords.xy - middle) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
+    local middle = Config.Locations.middle.coords
+    if #(coords.xy - middle.xy) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
+    alarmActivated = true
     TriggerClientEvent('prison:client:JailAlarm', -1, true)
     SetTimeout(5 * 60000, function()
+        alarmActivated = false
         TriggerClientEvent('prison:client:JailAlarm', -1, false)
     end)
 end)
 
+---TODO: Seems like this should either be a callback or handling an event named 'jobFinished' or something similar
+---In any case. This construct doesn't seem like the correct structure to handle this.
+---When player is finished with a job, they have a chance to find a phone
 RegisterNetEvent('prison:server:CheckChance', function()
     local src = source
     local player = exports.qbx_core:GetPlayer(src)
     if not player or player.PlayerData.metadata.injail == 0 or gotItems[src] then return end
     local chance = math.random(100)
-    local odd = math.random(100)
-    if chance ~= odd then return end
+    if chance ~= 1 then return end
     if not player.Functions.AddItem('phone', 1) then return end
     TriggerClientEvent('inventory:client:ItemBox', src, exports.ox_inventory:Items()['phone'], 'add')
     TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_phone'), 'success')

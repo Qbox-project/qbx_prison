@@ -65,34 +65,30 @@ end
 
 local function applyClothes()
 	local playerPed = cache.ped
-	if DoesEntityExist(playerPed) then
-		Citizen.CreateThread(function()
-			SetPedArmour(playerPed, 0)
-			ClearPedBloodDamage(playerPed)
-			ResetPedVisibleDamage(playerPed)
-			ClearPedLastWeaponDamage(playerPed)
-			ResetPedMovementClipset(playerPed, 0)
-			if QBX.PlayerData.charinfo.gender == 0 then
-				TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.male)
-			else
-				TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.female)
-			end
-		end)
-	end
+	if not DoesEntityExist(playerPed) then return end
+	CreateThread(function()
+		SetPedArmour(playerPed, 0)
+		ClearPedBloodDamage(playerPed)
+		ResetPedVisibleDamage(playerPed)
+		ClearPedLastWeaponDamage(playerPed)
+		ResetPedMovementClipset(playerPed, 0)
+		if QBX.PlayerData.charinfo.gender == 0 then
+			TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.male)
+		else
+			TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.female)
+		end
+	end)
 end
 
--- Events
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-	if QBX.PlayerData.metadata.injail > 0 then
-		TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
-	end
-
+local function turnOnAlarmIfActive()
 	lib.callback('prison:server:IsAlarmActive', false, function(active)
 		if not active then return end
 		TriggerEvent('prison:client:JailAlarm', true)
 	end)
+end
 
+--- TODO: switch to ox_target
+local function spawnNPCsIfNotExisting()
 	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
 
 	local pedModel = `s_m_m_armoured_01`
@@ -141,6 +137,15 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 		},
 		distance = 2.5,
 	})
+end
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+	if QBX.PlayerData.metadata.injail > 0 then
+		TriggerEvent("prison:client:Enter", QBX.PlayerData.metadata.injail)
+	end
+
+	turnOnAlarmIfActive()
+	spawnNPCsIfNotExisting()
 end)
 
 AddEventHandler('onResourceStart', function(resource)
@@ -152,59 +157,8 @@ AddEventHandler('onResourceStart', function(resource)
 		end
 	end
 
-	lib.callback('prison:server:IsAlarmActive', false, function(active)
-		if not active then return end
-		TriggerEvent('prison:client:JailAlarm', true)
-	end)
-
-	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
-
-	local pedModel = `s_m_m_armoured_01`
-	lib.requestModel(pedModel)
-
-	freedomPed = CreatePed(0, pedModel, Config.Locations.freedom.coords.x, Config.Locations.freedom.coords.y, Config.Locations.freedom.coords.z, Config.Locations.freedom.coords.w, false, true)
-	FreezeEntityPosition(freedomPed, true)
-	SetEntityInvincible(freedomPed, true)
-	SetBlockingOfNonTemporaryEvents(freedomPed, true)
-	TaskStartScenarioInPlace(freedomPed, 'WORLD_HUMAN_CLIPBOARD', 0, true)
-
-	canteenPed = CreatePed(0, pedModel, Config.Locations.shop.coords.x, Config.Locations.shop.coords.y, Config.Locations.shop.coords.z, Config.Locations.shop.coords.w, false, true)
-	FreezeEntityPosition(canteenPed, true)
-	SetEntityInvincible(canteenPed, true)
-	SetBlockingOfNonTemporaryEvents(canteenPed, true)
-	TaskStartScenarioInPlace(canteenPed, 'WORLD_HUMAN_CLIPBOARD', 0, true)
-
-	if not Config.UseTarget then return end
-
-	exports['qb-target']:AddTargetEntity(freedomPed, {
-		options = {
-			{
-				type = "client",
-				event = "prison:client:Leave",
-				icon = 'fas fa-clipboard',
-				label = Lang:t("info.target_freedom_option"),
-				canInteract = function()
-					return InJail
-				end
-			}
-		},
-		distance = 2.5,
-	})
-
-	exports['qb-target']:AddTargetEntity(canteenPed, {
-		options = {
-			{
-				type = "client",
-				event = "prison:client:canteen",
-				icon = 'fas fa-clipboard',
-				label = Lang:t("info.target_canteen_option"),
-				canInteract = function()
-					return InJail
-				end
-			}
-		},
-		distance = 2.5,
-	})
+	turnOnAlarmIfActive()
+	spawnNPCsIfNotExisting()
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
@@ -217,6 +171,7 @@ end)
 AddEventHandler('prison:client:Enter', function(time)
 	exports.qbx_core:Notify( Lang:t("error.injail", {Time = time}), "error")
 
+	--- TODO: should this be a notification?
 	TriggerEvent("chat:addMessage", {
 		color = {3, 132, 252},
 		multiline = true,
@@ -252,65 +207,44 @@ AddEventHandler('prison:client:Enter', function(time)
 	exports.qbx_core:Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[CurrentJob] }), "error")
 end)
 
+local function release()
+	JailTime = 0
+	TriggerServerEvent("prison:server:SetJailStatus", 0)
+	TriggerServerEvent("prison:server:GiveJailItems")
+	TriggerEvent("chat:addMessage", {
+		color = {3, 132, 252},
+		multiline = true,
+		args = {"SYSTEM", Lang:t("info.received_property")}
+	})
+	InJail = false
+	RemoveBlip(CurrentBlip)
+	RemoveBlip(CellsBlip)
+	RemoveBlip(TimeBlip)
+	RemoveBlip(ShopBlip)
+	exports.qbx_core:Notify(Lang:t("success.free_"))
+	DoScreenFadeOut(500)
+	while not IsScreenFadedOut() do
+		Wait(10)
+	end
+	TriggerServerEvent('qb-clothes:loadPlayerSkin')
+	SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, false, false, false, false)
+	SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
+
+	Wait(500)
+	DoScreenFadeIn(1000)
+end
+
 RegisterNetEvent('prison:client:Leave', function()
 	if JailTime > 0 then
 		exports.qbx_core:Notify( Lang:t("info.timeleft", {JAILTIME = JailTime}))
 	else
-		JailTime = 0
-		TriggerServerEvent("prison:server:SetJailStatus", 0)
-		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chat:addMessage", {
-			color = {3, 132, 252},
-			multiline = true,
-			args = {"SYSTEM", Lang:t("info.received_property")}
-		})
-		InJail = false
-		RemoveBlip(CurrentBlip)
-		RemoveBlip(CellsBlip)
-		RemoveBlip(TimeBlip)
-		TimeBlip = nil
-		RemoveBlip(ShopBlip)
-		ShopBlip = nil
-		exports.qbx_core:Notify(Lang:t("success.free_"))
-		DoScreenFadeOut(500)
-		while not IsScreenFadedOut() do
-			Wait(10)
-		end
-		TriggerServerEvent('qb-clothes:loadPlayerSkin')
-		SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, false, false, false, false)
-		SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
-
-		Wait(500)
-
-		DoScreenFadeIn(1000)
+		release()
 	end
 end)
 
 RegisterNetEvent('prison:client:UnjailPerson', function()
-	if JailTime > 0 then
-		TriggerServerEvent("prison:server:SetJailStatus", 0)
-		TriggerServerEvent("prison:server:GiveJailItems")
-		TriggerEvent("chat:addMessage", {
-			color = {3, 132, 252},
-			multiline = true,
-			args = {"SYSTEM", Lang:t("info.received_property")}
-		})
-		InJail = false
-		RemoveBlip(CurrentBlip)
-		RemoveBlip(CellsBlip)
-		RemoveBlip(TimeBlip)
-		RemoveBlip(ShopBlip)
-		exports.qbx_core:Notify(Lang:t("success.free_"))
-		DoScreenFadeOut(500)
-		while not IsScreenFadedOut() do
-			Wait(10)
-		end
-		TriggerServerEvent('qb-clothes:loadPlayerSkin')
-		SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, false, false, false, false)
-		SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
-		Wait(500)
-		DoScreenFadeIn(1000)
-	end
+	if JailTime == 0 then return end
+	release()
 end)
 
 RegisterNetEvent('prison:client:canteen',function()
