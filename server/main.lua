@@ -110,6 +110,11 @@ lib.callback.register('prison:server:IsAlarmActive', function()
     return alarmActivated
 end)
 
+exports.ox_inventory:RegisterShop('Canteen', {
+    name = 'Prison Canteen',
+    inventory = Config.CanteenItems,
+})
+
 ---@deprecated do not call this event
 RegisterNetEvent('prison:server:SaveJailItems', function()
     lib.print.error(GetInvokingResource(), "invoked deprecated prison:server:SaveJailedItems event. Event has no effect.")

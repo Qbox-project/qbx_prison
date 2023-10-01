@@ -87,6 +87,38 @@ local function turnOnAlarmIfActive()
 	end)
 end
 
+local function release()
+	JailTime = 0
+	InJail = false
+	RemoveBlip(CurrentBlip)
+	RemoveBlip(CellsBlip)
+	RemoveBlip(TimeBlip)
+	RemoveBlip(ShopBlip)
+	exports.qbx_core:Notify(Lang:t("success.free_"))
+	DoScreenFadeOut(500)
+	while not IsScreenFadedOut() do
+		Wait(10)
+	end
+	TriggerServerEvent('qb-clothes:loadPlayerSkin')
+	SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, false, false, false, false)
+	SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
+
+	Wait(500)
+	DoScreenFadeIn(1000)
+end
+
+local function askToLeave()
+	if JailTime > 0 then
+		exports.qbx_core:Notify( Lang:t("info.timeleft", {JAILTIME = JailTime}))
+	else
+		release()
+	end
+end
+
+local function openCanteen()
+	exports.ox_inventory:openInventory('shop', { type = 'Canteen', id = 1})
+end
+
 --- TODO: switch to ox_target
 local function spawnNPCsIfNotExisting()
 	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
@@ -108,34 +140,26 @@ local function spawnNPCsIfNotExisting()
 
 	if not Config.UseTarget then return end
 
-	exports['qb-target']:AddTargetEntity(freedomPed, {
-		options = {
-			{
-				type = "client",
-				event = "prison:client:Leave",
-				icon = 'fas fa-clipboard',
-				label = Lang:t("info.target_freedom_option"),
-				canInteract = function()
-					return InJail
-				end
-			}
-		},
-		distance = 2.5,
+	exports.ox_target:addLocalEntity(freedomPed, {
+		{
+			icon = 'fas fa-clipboard',
+			label = Lang:t("info.target_freedom_option"),
+			canInteract = function()
+				return InJail
+			end,
+			onSelect = askToLeave
+		}
 	})
 
-	exports['qb-target']:AddTargetEntity(canteenPed, {
-		options = {
-			{
-				type = "client",
-				event = "prison:client:canteen",
-				icon = 'fas fa-clipboard',
-				label = Lang:t("info.target_canteen_option"),
-				canInteract = function()
-					return InJail
-				end
-			}
-		},
-		distance = 2.5,
+	exports.ox_target:addLocalEntity(canteenPed, {
+		{
+			icon = 'fas fa-clipboard',
+			label = Lang:t("info.target_canteen_option"),
+			canInteract = function()
+				return InJail
+			end,
+			onSelect = openCanteen
+		}
 	})
 end
 
@@ -205,46 +229,9 @@ RegisterNetEvent('qbx_prison:client:playerJailed', function(minutes)
 	onEnter(minutes)
 end)
 
-local function release()
-	JailTime = 0
-	InJail = false
-	RemoveBlip(CurrentBlip)
-	RemoveBlip(CellsBlip)
-	RemoveBlip(TimeBlip)
-	RemoveBlip(ShopBlip)
-	exports.qbx_core:Notify(Lang:t("success.free_"))
-	DoScreenFadeOut(500)
-	while not IsScreenFadedOut() do
-		Wait(10)
-	end
-	TriggerServerEvent('qb-clothes:loadPlayerSkin')
-	SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, false, false, false, false)
-	SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
-
-	Wait(500)
-	DoScreenFadeIn(1000)
-end
-
 RegisterNetEvent('qbx_prison:client:playerReleased', function()
 	if GetInvokingResource() then return end
 	release()
-end)
-
---- TODO: make a local function
-AddEventHandler('prison:client:Leave', function()
-	if JailTime > 0 then
-		exports.qbx_core:Notify( Lang:t("info.timeleft", {JAILTIME = JailTime}))
-	else
-		release()
-	end
-end)
-
-RegisterNetEvent('prison:client:canteen',function()
-	local shopItems = {}
-	shopItems.label = "Prison Canteen"
-	shopItems.items = Config.CanteenItems
-	shopItems.slots = #Config.CanteenItems
-	TriggerServerEvent("inventory:server:OpenInventory", "shop", "Canteenshop_"..math.random(1, 99), shopItems)
 end)
 
 -- Threads
@@ -271,7 +258,7 @@ end)
 
 CreateThread(function()
 	if not Config.UseTarget then
-		freedom = BoxZone:Create(vector3(Config.Locations.freedom.coords.x, Config.Locations.freedom.coords.y, Config.Locations.freedom.coords.z), 2.75, 2.75, {
+		freedom = BoxZone:Create(Config.Locations.freedom.coords.xyz, 2.75, 2.75, {
 			name="freedom",
 			debugPoly = false,
 		})
@@ -282,7 +269,7 @@ CreateThread(function()
 					while insideFreedom do
 						if IsControlJustReleased(0, 38) then
 							lib.hideTextUI()
-							TriggerEvent("prison:client:Leave")
+							askToLeave()
 							break
 						end
 						Wait(0)
@@ -293,7 +280,7 @@ CreateThread(function()
 				lib.hideTextUI()
 			end
 		end)
-		canteen = BoxZone:Create(vector3(Config.Locations.shop.coords.x, Config.Locations.shop.coords.y, Config.Locations.shop.coords.z), 2.75, 7.75, {
+		canteen = BoxZone:Create(Config.Locations.shop.coords.xyz, 2.75, 7.75, {
 			name="canteen",
 			debugPoly = false,
 		})
@@ -304,7 +291,7 @@ CreateThread(function()
 					while insideCanteen do
 						if IsControlJustReleased(0, 38) then
 							lib.hideTextUI()
-							TriggerEvent("prison:client:canteen")
+							openCanteen()
 							break
 						end
 						Wait(0)
@@ -326,4 +313,14 @@ end)
 ---@deprecated call server export ReleasePlayer instead
 RegisterNetEvent('prison:client:UnjailPerson', function()
 	lib.print.error(GetInvokingResource(), "invoked deprecated prison:client:UnjailPerson event. Call server export ReleasePlayer instead.")
+end)
+
+---@deprecated do not call.
+AddEventHandler('prison:client:Leave', function()
+	lib.print.error(GetInvokingResource(), "invoked deprecated prison:client:Leave event. No action taken.")
+end)
+
+---@deprecated do not call.
+RegisterNetEvent('prison:client:canteen', function()
+	lib.print.error(GetInvokingResource(), "invoked deprecated prison:client:canteen event. No action taken.")
 end)

@@ -1,6 +1,6 @@
 Config = {}
 
-Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use qb-target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
+Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use ox_target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
 
 Config.Jobs = {
     electrician = "Electrician"
@@ -63,7 +63,7 @@ Config.Locations = {
         coords = vector4(1765.67, 2565.91, 44.56, 1.5)
     },
     middle = {
-        coords = vector4(1693.33, 2569.51, 44.55, 123.5)
+        coords = vec3(1693.33, 2569.51, 44.55)
     },
     shop = {
         coords = vector4(1777.59, 2560.52, 44.62, 187.83)
@@ -120,17 +120,11 @@ Config.CanteenItems = {
     {
         name = "sandwich",
         price = 4,
-        amount = 50,
-        info = {},
-        type = "item",
-        slot = 1
+        count = 50,
     },
     {
         name = "water_bottle",
         price = 4,
-        amount = 50,
-        info = {},
-        type = "item",
-        slot = 2
+        count = 50,
     }
 }
