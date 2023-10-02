@@ -115,7 +115,6 @@ local function openCanteen()
 	exports.ox_inventory:openInventory('shop', { type = 'Canteen', id = 1})
 end
 
---- TODO: switch to ox_target
 local function spawnNPCsIfNotExisting()
 	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
 
@@ -167,6 +166,20 @@ local function initPrison(time)
 	applyClothes()
 	createCellsBlip()
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
+
+	CreateThread(function()
+		while JailTime > 0 and InJail do
+			Wait(60000)
+			if JailTime > 0 and InJail then
+				JailTime -= 1
+				if JailTime <= 0 then
+					JailTime = 0
+					exports.qbx_core:Notify(Lang:t("success.timesup"), "success", 10000)
+				end
+				TriggerServerEvent("prison:server:SetJailStatus", JailTime)
+			end
+		end
+	end)
 end
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
@@ -221,28 +234,6 @@ end)
 RegisterNetEvent('qbx_prison:client:playerReleased', function()
 	if GetInvokingResource() then return end
 	release()
-end)
-
--- Threads
-
-CreateThread(function()
-    TriggerEvent('prison:client:JailAlarm', false)
-	while true do
-		local sleep = 1000
-		if JailTime > 0 and InJail then
-			Wait(1000 * 60)
-			sleep = 0
-			if JailTime > 0 and InJail then
-				JailTime -= 1
-				if JailTime <= 0 then
-					JailTime = 0
-					exports.qbx_core:Notify(Lang:t("success.timesup"), "success", 10000)
-				end
-				TriggerServerEvent("prison:server:SetJailStatus", JailTime)
-			end
-		end
-		Wait(sleep)
-	end
 end)
 
 if not Config.UseTarget then
