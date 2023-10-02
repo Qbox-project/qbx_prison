@@ -1,7 +1,5 @@
 local currentGate = 0
-local requiredItemsShowed = false
 local requiredItems = {}
-local inRange = false
 local securityLockdown = false
 local gates = {
     [1] = {
@@ -132,50 +130,42 @@ RegisterNetEvent('prison:client:JailAlarm', function(toggle)
     end
 end)
 
--- Threads
-
-CreateThread(function()
-    Wait(500)
+local function createGateZones()
     requiredItems = {
         [1] = {name = exports.ox_inventory:Items().electronickit.name, image = exports.ox_inventory:Items().electronickit.image},
         [2] = {name = exports.ox_inventory:Items().gatecrack.name, image = exports.ox_inventory:Items().gatecrack.image},
     }
-    while true do
-        inRange = false
-        currentGate = 0
-        local sleep = 1000
-        if LocalPlayer.state.isLoggedIn then
-            if QBX.PlayerData.job.type ~= "leo" then
-                local pos = GetEntityCoords(cache.ped)
-                for k in pairs(gates) do
-                    local dist =  #(pos - gates[k].coords)
-                    if dist < 1.5 then
-                        currentGate = k
-                        inRange = true
-                        if securityLockdown then
-                            sleep = 0
-                            DrawText3D(gates[k].coords, "~r~SYSTEM LOCKDOWN")
-                        elseif gates[k].hit then
-                            sleep = 0
-                            DrawText3D(gates[k].coords, "SYSTEM BREACH")
-                        elseif not requiredItemsShowed then
-                            requiredItemsShowed = true
-                            TriggerEvent('inventory:client:requiredItems', requiredItems, true)
-                        end
-                    end
+    currentGate = 0
+    for i = 1, #gates do
+        lib.zones.sphere({
+            coords = gates[i].coords,
+            radius = 1.5,
+            onEnter = function()
+                if QBX.PlayerData.job.type == "leo" then return end
+                currentGate = i
+                TriggerEvent('inventory:client:requiredItems', requiredItems, true)
+            end,
+            onLeave = function()
+                if QBX.PlayerData.job.type == "leo" then return end
+                TriggerEvent('inventory:client:requiredItems', requiredItems, false)
+            end,
+            inside = function()
+                if securityLockdown then
+                    DrawText3D(gates[i].coords, "~r~SYSTEM LOCKDOWN")
+                elseif gates[i].hit then
+                    DrawText3D(gates[i].coords, "SYSTEM BREACH")
                 end
-
-                if not inRange then
-                    if requiredItemsShowed then
-                        requiredItemsShowed = false
-                        TriggerEvent('inventory:client:requiredItems', requiredItems, false)
-                    end
-                end
-            end
-        end
-        Wait(sleep)
+            end,
+        })
     end
+end
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+    createGateZones()
 end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', createGateZones)
 
 local function checkForEscape()
     if not InJail then return end
