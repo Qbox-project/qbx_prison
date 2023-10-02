@@ -12,7 +12,7 @@ local Translations = {
         do_some_work = "Udfør noget arbejde for at nedsætte din straf, nuværende job: %{currentjob} ",
     },
     success = {
-        found_phone = "Du fandt en mobil..",
+        found_item = "Du fandt en mobil..",
         time_cut = "Du fik nedsat din tid for at arbejde.",
         free_ = "Du er fri! Nyd det! :)",
         timesup = "Din tid er omme! Udskriv dig selv i receptionen",

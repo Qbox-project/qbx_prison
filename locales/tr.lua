@@ -12,7 +12,7 @@ local Translations = {
         do_some_work = "Ceza indirimi için biraz çalışın, anlık iş: %{currentjob} ",
     },
     success = {
-        found_phone = "Bir telefon buldun..",
+        found_item = "Bir telefon buldun..",
         time_cut = "Ceza indirimin için biraz çalıştın.",
         free_ = "Özgürsün! Tadını çıkar! :)",
         timesup = "Süren doldu! Ziyaretçi merkezine gidip çıkışınızı yapın.",

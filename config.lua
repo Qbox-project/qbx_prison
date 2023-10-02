@@ -3,7 +3,20 @@ Config = {}
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use ox_target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
 
 Config.Jobs = {
-    electrician = "Electrician"
+    electrician = {
+        locations = {
+            vec3(1761.46, 2540.41, 45.56),
+            vec3(1718.54, 2527.802, 45.56),
+            vec3(1700.199, 2474.811, 45.56),
+            vec3(1664.827, 2501.58, 45.56),
+            vec3(1621.622, 2509.302, 45.56),
+            vec3(1627.936, 2538.393, 45.56),
+            vec3(1625.1, 2575.988, 45.56),
+        },
+        reward = 'phone',
+        rewardChance = 1, -- out of 100
+        canOnlyGetOneReward = true, -- if true, once reward is found, will not get another
+    }
 }
 
 Config.Uniforms ={
@@ -28,31 +41,6 @@ Config.Uniforms ={
 }
 
 Config.Locations = {
-    jobs = {
-        electrician = {
-            {
-                coords = vector4(1761.46, 2540.41, 45.56, 272.249),
-            },
-            {
-                coords = vector4(1718.54, 2527.802, 45.56, 272.249),
-            },
-            {
-                coords = vector4(1700.199, 2474.811, 45.56, 272.249),
-            },
-            {
-                coords = vector4(1664.827, 2501.58, 45.56, 272.249),
-            },
-            {
-                coords = vector4(1621.622, 2509.302, 45.56, 272.249),
-            },
-            {
-                coords = vector4(1627.936, 2538.393, 45.56, 272.249),
-            },
-            {
-                coords = vector4(1625.1, 2575.988, 45.56, 272.249),
-            }
-        }
-    },
     freedom = {
         coords = vector4(1740.88, 2476.57, 44.85, 299.49)
     },

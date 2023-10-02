@@ -12,7 +12,7 @@ local Translations = {
         do_some_work = "Tee työtä tuomion lyhentämiseksi, tämänhetkinen työ: %{currentjob} ",
     },
     success = {
-        found_phone = "Löysit puhelimen..",
+        found_item = "Löysit puhelimen..",
         time_cut = "Olet lyhentänyt tuomiotasi!",
         free_ = "Pääsit vapaaksi! Ethän tee enään mitään tyhmää ;)",
         timesup = "Aikasi on päättynyt! Ilmoita itsesi vierailijapisteellä",

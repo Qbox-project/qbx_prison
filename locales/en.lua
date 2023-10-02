@@ -13,7 +13,7 @@ local Translations = {
         security_activated = "Highest security level is active, stay with the cell blocks!"
     },
     success = {
-        found_phone = "You found a phone..",
+        found_item = "You found a %{item}..",
         time_cut = "You've worked some time off your sentence.",
         free_ = "You're free! Enjoy it! :)",
         timesup = "Your time is up! Check yourself out at the visitors center",
