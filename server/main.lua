@@ -124,7 +124,7 @@ RegisterNetEvent('prison:server:GiveJailItems', function()
 end)
 
 ---@deprecated No replacement. If valid use case, contact Qbox team to request an export or event be exposed
-RegisterNetEvent('prison:server:SetGateHit', function(key)
+RegisterNetEvent('prison:server:SetGateHit', function()
     lib.print.error(GetInvokingResource(), "invoked deprecated event prison:server:SetGateHit. Event has no effect.")
 end)
 
