@@ -161,16 +161,9 @@ end
 
 local function initPrison(time)
 	InJail = true
-	InJail = true
 	JailTime = time
-	local tempJobs = {}
-	local i = 1
-	for k in pairs(Config.Locations.jobs) do
-		tempJobs[i] = k
-		i += 1
-	end
-	CurrentJob = tempJobs[math.random(1, #tempJobs)]
-	CreateJobBlip(true)
+	CurrentJob = "Electrician"
+	CreateJobBlip()
 	applyClothes()
 	createCellsBlip()
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
@@ -217,7 +210,7 @@ local function onEnter(minutes)
 	initPrison(minutes)
 	Wait(2000)
 	DoScreenFadeIn(1000)
-	exports.qbx_core:Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[CurrentJob] }), "error")
+	exports.qbx_core:Notify( Lang:t("error.do_some_work", {currentjob = 'Electrician' }), "error")
 end
 
 RegisterNetEvent('qbx_prison:client:playerJailed', function(minutes)
@@ -251,8 +244,6 @@ CreateThread(function()
 		Wait(sleep)
 	end
 end)
-
-
 
 if not Config.UseTarget then
 

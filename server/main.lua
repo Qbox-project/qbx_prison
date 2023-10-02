@@ -91,18 +91,16 @@ RegisterNetEvent('prison:server:JailAlarm', function()
     end)
 end)
 
----TODO: Seems like this should either be a callback or handling an event named 'jobFinished' or something similar
----In any case. This construct doesn't seem like the correct structure to handle this.
----When player is finished with a job, they have a chance to find a phone
-RegisterNetEvent('prison:server:CheckChance', function()
+---When player is finished with a job, they have a chance to find a reward
+RegisterNetEvent('qbx_prison:server:completedJob', function()
     local src = source
     local player = exports.qbx_core:GetPlayer(src)
-    if not player or player.PlayerData.metadata.injail == 0 or gotItems[src] then return end
+    if not player or player.PlayerData.metadata.injail == 0 then return end
+    if Config.Jobs.electrician.canOnlyGetOneReward and gotItems[src] then return end
     local chance = math.random(100)
-    if chance ~= 1 then return end
-    if not player.Functions.AddItem('phone', 1) then return end
-    TriggerClientEvent('inventory:client:ItemBox', src, exports.ox_inventory:Items()['phone'], 'add')
-    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_phone'), 'success')
+    if chance > Config.Jobs.electrician.rewardChance then return end
+    if not player.Functions.AddItem(Config.Jobs.electrician.reward, 1) then return end
+    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_item', {item = Config.Jobs.electrician.reward}), 'success')
     gotItems[src] = true
 end)
 
@@ -127,11 +125,15 @@ end)
 
 ---@deprecated No replacement. If valid use case, contact Qbox team to request an export or event be exposed
 RegisterNetEvent('prison:server:SetGateHit', function(key)
-    lib.print.warn(GetInvokingResource(), "invoked deprecated event prison:server:SetGateHit")
-    setGateHit(key)
+    lib.print.error(GetInvokingResource(), "invoked deprecated event prison:server:SetGateHit. Event has no effect.")
 end)
 
 ---@deprecated Do not call this event
 RegisterNetEvent('prison:server:SecurityLockdown', function()
     lib.print.error(GetInvokingResource(), "invoked prison:server:SecurityLockdown event. Event has no effect.")
+end)
+
+---@deprecated Do not call this event
+RegisterNetEvent('prison:server:CheckChance', function()
+    lib.print.error(GetInvokingResource(), "invoked deprecated prison:server:CheckChance event. Event has no effect.")
 end)

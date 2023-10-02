@@ -13,7 +13,7 @@ local Translations = {
         security_activated = "Noodalarm, blijf bij de cellen!"
     },
     success = {
-        found_phone = "Je hebt een telefoon gevonden..",
+        found_item = "Je hebt een telefoon gevonden..",
         time_cut = "Je hebt wat tijd van je straf gewerkt.",
         free_ = "Je bent vrij! Geniet ervan! :)",
         timesup = "Je tijd is voorbij! Check jezelf uit in het bezoekerscentrum",
