@@ -3,11 +3,11 @@ local isWorking = false
 
 local function newRandomArray(size)
     local array = {}
-    for i = 1, #size do
+    for i = 1, size do
         array[i] = i
     end
-    for i = #size, 2, -1 do
-        local rand = math.random(i)
+    for i = size, 2, -1 do
+        local rand = math.random(size)
         array[i], array[rand] = array[rand], array[i]
     end
     return array
