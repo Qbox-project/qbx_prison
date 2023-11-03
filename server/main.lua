@@ -28,7 +28,7 @@ local function jailPlayer(src, minutes)
     player.Functions.AddMoney('cash', 80)
 
     setJailStatus(src, minutes)
-    TriggerClientEvent('qbx_prison:client:playerJailed', src)
+    TriggerClientEvent('qbx_prison:client:playerJailed', src, minutes)
 end
 
 exports('JailPlayer', jailPlayer)
