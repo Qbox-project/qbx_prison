@@ -42,6 +42,12 @@ end
 
 exports('ReleasePlayer', releasePlayer)
 
+RegisterServerEvent('qbx_prison:server:playerAsksToLeave', function()
+    local player = exports.qbx_core:GetPlayer(source)
+    if player.PlayerData.metadata.injail > 0 then return end
+    releasePlayer(source)
+end)
+
 local function securityLockdown()
     TriggerClientEvent("prison:client:SetLockDown", -1, true)
     for _, player in pairs(exports.qbx_core:GetQBPlayers()) do
