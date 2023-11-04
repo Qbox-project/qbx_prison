@@ -107,7 +107,7 @@ local function askToLeave()
 	if JailTime > 0 then
 		exports.qbx_core:Notify( Lang:t("info.timeleft", {JAILTIME = JailTime}))
 	else
-		TriggerServerEvent("rs_prison:server:releasePlayer")
+		TriggerServerEvent("qbx_prison:server:releasePlayer")
 	end
 end
 

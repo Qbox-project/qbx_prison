@@ -42,7 +42,7 @@ end
 
 exports('ReleasePlayer', releasePlayer)
 
-RegisterNetEvent("rs_prison:server:releasePlayer", function ()
+RegisterNetEvent("qbx_prison:server:releasePlayer", function ()
     local src = source
     local Player = exports.qbx_core:GetPlayer(src)
     if not Player then return end
