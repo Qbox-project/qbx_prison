@@ -42,6 +42,18 @@ end
 
 exports('ReleasePlayer', releasePlayer)
 
+RegisterNetEvent("rs_prison:server:releasePlayer", function ()
+    local src = source
+    local Player = exports.qbx_core:GetPlayer(src)
+    if not Player then return end
+    if Player.Functions.metadata.injail and Player.Functions.metadata.injail == 0 then
+        setJailStatus(src, 0)
+        exports.ox_inventory:ReturnInventory(src)
+        exports.qbx_core:Notify(src, Lang:t("info.received_property"))
+        TriggerClientEvent('qbx_prison:client:playerReleased', src) 
+    end
+end)
+
 local function securityLockdown()
     TriggerClientEvent("prison:client:SetLockDown", -1, true)
     for _, player in pairs(exports.qbx_core:GetQBPlayers()) do
