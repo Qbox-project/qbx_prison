@@ -13,6 +13,24 @@ Config.Jobs = {
             vec3(1627.936, 2538.393, 45.56),
             vec3(1625.1, 2575.988, 45.56),
         },
+    cleantables = {
+        locations = {
+            vec3(1780.96, 2554.46, 45.08),
+            vec3(1780.96, 2550.85, 45.08),
+            vec3(1780.96, 2547.30, 45.08),
+            vec3(1786.77, 2547.30, 45.08),
+            vec3(1786.77, 2550.85, 45.08),
+            vec3(1786.77, 2554.46, 45.08),
+        },
+    floorcleaning = {
+        locations = {
+            vec3(1768.10, 2500.25, 44.74),
+            vec3(1755.07, 2493.48, 44.74),
+            vec3(1748.81, 2489.95, 44.74),
+            vec3(1761.25, 2497.09, 48.69),
+            vec3(1751.97, 2491.73, 48.69),
+            vec3(1767.75, 2478.51, 44.74),
+        },
         reward = 'phone',
         rewardChance = 1, -- out of 100
         canOnlyGetOneReward = true, -- if true, once reward is found, will not get another
