@@ -57,6 +57,20 @@ local function createCellsBlip()
 	EndTextCommandSetBlipName(ShopBlip)
 end
 
+local function createPrisonBlip()
+	if not next(Config.Locations.prison) then return end
+	for _, station in pairs(Config.Locations.prison) do
+		local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
+		SetBlipSprite(blip, 188)
+		SetBlipAsShortRange(blip, true)
+		SetBlipScale(blip, 0.8)
+		SetBlipColour(blip, 42)
+		BeginTextCommandSetBlipName('STRING')
+		AddTextComponentString(station.label)
+		EndTextCommandSetBlipName(blip)
+	end
+end
+
 -- Add clothes to prisioner
 
 local function applyClothes()
@@ -182,22 +196,14 @@ local function initPrison(time)
 	end)
 end
 
+
+
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	if QBX.PlayerData.metadata.injail > 0 then
 		initPrison(QBX.PlayerData.metadata.injail)
 	end
 
-	for _, station in pairs(Config.Locations.prison) do
-		local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
-		SetBlipSprite(blip, 188)
-		SetBlipAsShortRange(blip, true)
-		SetBlipScale(blip, 0.8)
-		SetBlipColour(blip, 42)
-		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentString(station.label)
-		EndTextCommandSetBlipName(blip)
-	end
-
+	createPrisonBlip()
 	turnOnAlarmIfActive()
 	spawnNPCsIfNotExisting()
 end)
