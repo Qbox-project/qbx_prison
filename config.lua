@@ -41,6 +41,9 @@ Config.Uniforms ={
 }
 
 Config.Locations = {
+    prison = {
+        {label = 'Prison', coords = vec3(1678.9, 2513.4, 45.6), disable = false},
+    },
     freedom = {
         coords = vector4(1740.88, 2476.57, 44.85, 299.49)
     },
