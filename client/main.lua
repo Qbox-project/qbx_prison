@@ -297,3 +297,22 @@ end)
 RegisterNetEvent('prison:client:canteen', function()
 	lib.print.error(GetInvokingResource(), "invoked deprecated prison:client:canteen event. No action taken.")
 end)
+
+CreateThread(function()
+    -- Create a marker for the prison station
+    for _, prisonStation in pairs(Config.Locations.prison) do
+        local blip = AddBlipForCoord(prisonStation.coords.x, prisonStation.coords.y, prisonStation.coords.z)
+        SetBlipSprite(blip, 188) -- You can change the sprite number as desired
+        SetBlipAsShortRange(blip, true)
+        SetBlipScale(blip, 0.8)
+        SetBlipColour(blip, 42)
+        
+        BeginTextCommandSetBlipName('STRING')
+        AddTextComponentString(prisonStation.label)
+        EndTextCommandSetBlipName(blip)
+
+        if prisonStation.disable then
+            SetBlipDisplay(blip, 0)
+        end
+    end
+end)
