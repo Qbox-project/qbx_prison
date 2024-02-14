@@ -1,0 +1,25 @@
+{
+  "error": {
+    "cancelled": "Processo cancelado..",
+    "didnt_work": "Não funcionou..",
+    "do_some_work": "Trabalha para teres a pena reduzida. Trabalho atual: %s",
+    "door_open": "A porta já está aberta..",
+    "emty_box": "A caixa está vazia..",
+    "escaped": "Tu escapaste... Sai daqui imediatamente!",
+    "injail": "Foste preso por %s meses..",
+    "item_missing": "Falta-te um item..",
+    "missing_something": "Parece que te estás a esquecer de alguma coisa..",
+    "not_enough_police": "Agentes da autoridade insuficientes.."
+  },
+  "info": {
+    "job_interaction": "[E] Electricity Work",
+    "lost_job": "Estás Desempregado",
+    "timeleft": "Ainda te faltam... %s meses"
+  },
+  "success": {
+    "found_item": "Encontraste um telemóvel..",
+    "free_": "A tua pena terminou! Aproveita a liberdade! :)",
+    "time_cut": "Trabalhaste e foi te reduzido o tempo de prisão.",
+    "timesup": "O teu tempo terminou! Dirige-te ao centro de visitantes"
+  }
+}

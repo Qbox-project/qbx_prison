@@ -34,14 +34,14 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
     if currentGate == 0 or securityLockdown or not gates[currentGate].hit then return end
     local hasItem = exports.ox_inventory:Search('count', 'gatecrack')
     if not hasItem then
-        exports.qbx_core:Notify(Lang:t("error.item_missing"), "error")
+        exports.qbx_core:Notify(locale("error.item_missing"), "error")
         return
     end
 
     TriggerEvent('inventory:client:requiredItems', requiredItems, false)
     if lib.progressBar({
         duration = math.random(5000, 10000),
-        label = Lang:t("info.connecting_device"),
+        label = locale("info.connecting_device"),
         useWhileDead = false,
         canCancel = true,
         anim = {
@@ -59,7 +59,7 @@ RegisterNetEvent('electronickit:UseElectronickit', function()
         TriggerEvent("mhacking:show")
         TriggerEvent("mhacking:start", math.random(5, 9), math.random(10, 18), onHackDone)
     else
-        exports.qbx_core:Notify(Lang:t("error.cancelled"), "error")
+        exports.qbx_core:Notify(locale("error.cancelled"), "error")
     end
 
     StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
@@ -71,15 +71,15 @@ RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
     TriggerEvent("chat:addMessage", {
         color = {255, 0, 0},
         multiline = true,
-        args = {"HOSTAGE", Lang:t("error.security_activated")}
+        args = {"HOSTAGE", locale("error.security_activated")}
     })
 end)
 
 RegisterNetEvent('prison:client:PrisonBreakAlert', function()
     local coords = Config.Locations.middle.coords
-    local alertData = {title = Lang:t("info.police_alert_title"), coords = {x = coords.x, y = coords.y, z = coords.z}, description = Lang:t("info.police_alert_description")}
+    local alertData = {title = locale("info.police_alert_title"), coords = {x = coords.x, y = coords.y, z = coords.z}, description = locale("info.police_alert_description")}
     TriggerEvent("qb-phone:client:addPoliceAlert", alertData)
-    TriggerEvent('police:client:policeAlert', coords, Lang:t("info.police_alert_description"))
+    TriggerEvent('police:client:policeAlert', coords, locale("info.police_alert_description"))
 
     local breakBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
     TriggerServerEvent('prison:server:JailAlarm')
@@ -151,9 +151,9 @@ local function createGateZones()
             end,
             inside = function()
                 if securityLockdown then
-                    DrawText3D(gates[i].coords, "~r~SYSTEM LOCKDOWN")
+                    qbx.drawText3d({ text = "~r~SYSTEM LOCKDOWN", coords = gates[i].coords })
                 elseif gates[i].hit then
-                    DrawText3D(gates[i].coords, "SYSTEM BREACH")
+                    qbx.drawText3d({ text = "SYSTEM BREACH", coords = gates[i].coords })
                 end
             end,
         })
@@ -176,7 +176,7 @@ local function checkForEscape()
     RemoveBlip(TimeBlip)
     RemoveBlip(ShopBlip)
     TriggerEvent("prison:client:PrisonBreakAlert")
-    exports.qbx_core:Notify(Lang:t("error.escaped"), "error")
+    exports.qbx_core:Notify(locale("error.escaped"), "error")
     TriggerServerEvent('qbx_prison:server:playerEscaped')
 end
 

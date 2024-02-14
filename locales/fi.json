@@ -1,0 +1,25 @@
+{
+  "error": {
+    "cancelled": "Toiminto peruutettu",
+    "didnt_work": "Et onnistunut..",
+    "do_some_work": "Tee työtä tuomion lyhentämiseksi, tämänhetkinen työ: %s",
+    "door_open": "Ovi on jo auki!",
+    "emty_box": "Laatikko on tyhjä..",
+    "escaped": "Pääsit pakoon... painu hiiteen!",
+    "injail": "Olet vankilassa %s kuukautta..",
+    "item_missing": "Sinulta puuttuu esine..",
+    "missing_something": "Näyttää siltä, että sinulta puuttuu jotain...",
+    "not_enough_police": "Ei tarpeeksi poliiseja"
+  },
+  "info": {
+    "job_interaction": "[E] Electricity Work",
+    "lost_job": "Olet saaut potkut",
+    "timeleft": "Tuomiosi kestää vielä %s kuukautta"
+  },
+  "success": {
+    "found_item": "Löysit puhelimen..",
+    "free_": "Pääsit vapaaksi! Ethän tee enään mitään tyhmää ;)",
+    "time_cut": "Olet lyhentänyt tuomiotasi!",
+    "timesup": "Aikasi on päättynyt! Ilmoita itsesi vierailijapisteellä"
+  }
+}

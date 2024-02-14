@@ -23,7 +23,7 @@ local function createCellsBlip()
 	SetBlipAsShortRange(CellsBlip, true)
 	SetBlipColour(CellsBlip, 4)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(Lang:t("info.cells_blip"))
+	AddTextComponentSubstringPlayerName(locale("info.cells_blip"))
 	EndTextCommandSetBlipName(CellsBlip)
 
 	if DoesBlipExist(TimeBlip) then
@@ -38,7 +38,7 @@ local function createCellsBlip()
 	SetBlipAsShortRange(TimeBlip, true)
 	SetBlipColour(TimeBlip, 4)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(Lang:t("info.freedom_blip"))
+	AddTextComponentSubstringPlayerName(locale("info.freedom_blip"))
 	EndTextCommandSetBlipName(TimeBlip)
 
 	if DoesBlipExist(ShopBlip) then
@@ -53,7 +53,7 @@ local function createCellsBlip()
 	SetBlipAsShortRange(ShopBlip, true)
 	SetBlipColour(ShopBlip, 0)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(Lang:t("info.canteen_blip"))
+	AddTextComponentSubstringPlayerName(locale("info.canteen_blip"))
 	EndTextCommandSetBlipName(ShopBlip)
 end
 
@@ -104,7 +104,7 @@ local function release()
 	RemoveBlip(CellsBlip)
 	RemoveBlip(TimeBlip)
 	RemoveBlip(ShopBlip)
-	exports.qbx_core:Notify(Lang:t("success.free_"))
+	exports.qbx_core:Notify(locale("success.free_"))
 	DoScreenFadeOut(500)
 	while not IsScreenFadedOut() do
 		Wait(10)
@@ -119,7 +119,7 @@ end
 
 local function askToLeave()
 	if JailTime > 0 then
-		exports.qbx_core:Notify( Lang:t("info.timeleft", {JAILTIME = JailTime}))
+		exports.qbx_core:Notify( locale("info.timeleft", JailTime))
 	else
 		TriggerServerEvent('qbx_prison:server:playerAsksToLeave')
 	end
@@ -152,7 +152,7 @@ local function spawnNPCsIfNotExisting()
 	exports.ox_target:addLocalEntity(freedomPed, {
 		{
 			icon = 'fas fa-clipboard',
-			label = Lang:t("info.target_freedom_option"),
+			label = locale("info.target_freedom_option"),
 			canInteract = function()
 				return InJail
 			end,
@@ -163,7 +163,7 @@ local function spawnNPCsIfNotExisting()
 	exports.ox_target:addLocalEntity(canteenPed, {
 		{
 			icon = 'fas fa-clipboard',
-			label = Lang:t("info.target_canteen_option"),
+			label = locale("info.target_canteen_option"),
 			canInteract = function()
 				return InJail
 			end,
@@ -188,7 +188,7 @@ local function initPrison(time)
 				JailTime -= 1
 				if JailTime <= 0 then
 					JailTime = 0
-					exports.qbx_core:Notify(Lang:t("success.timesup"), "success", 10000)
+					exports.qbx_core:Notify(locale("success.timesup"), "success", 10000)
 				end
 				TriggerServerEvent("prison:server:SetJailStatus", JailTime)
 			end
@@ -240,7 +240,7 @@ local function onEnter(minutes)
 	initPrison(minutes)
 	Wait(2000)
 	DoScreenFadeIn(1000)
-	exports.qbx_core:Notify( Lang:t("error.do_some_work", {currentjob = 'Electrician' }), "error")
+	exports.qbx_core:Notify( locale("error.do_some_work", "Electrician"), "error")
 end
 
 RegisterNetEvent('qbx_prison:client:playerJailed', function(minutes)

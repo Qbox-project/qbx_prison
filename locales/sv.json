@@ -1,0 +1,25 @@
+{
+  "error": {
+    "cancelled": "Avbrutet..",
+    "didnt_work": "Det fungerade inte..",
+    "do_some_work": "Arbeta lite för att redusera straffet, snabbjobb: %s",
+    "door_open": "Dörren är redan öppen..",
+    "emty_box": "Lådan är tom..",
+    "escaped": "Du rymde... Stick nu för fan!",
+    "injail": "Ditt straff är %s månader..",
+    "item_missing": "Du saknar ett objekt..",
+    "missing_something": "Det verkar som att du saknar något...",
+    "not_enough_police": "Inte tillräckligt med poliser.."
+  },
+  "info": {
+    "job_interaction": "[E] Electricity Work",
+    "lost_job": "Du är arbetslös",
+    "timeleft": "Du måste fortfarande... %s månader"
+  },
+  "success": {
+    "found_item": "Du hittade en telefon..",
+    "free_": "Du är fri! Njut! 🙂",
+    "time_cut": "Du förkortade ditt straff lite genom att arbeta.",
+    "timesup": "Tiden är ute! Du kan checka ut dig själv vid besökscentret"
+  }
+}
