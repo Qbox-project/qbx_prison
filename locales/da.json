@@ -1,0 +1,25 @@
+{
+  "error": {
+    "cancelled": "Handlingen afbrudt..",
+    "didnt_work": "Det virkede ikke..",
+    "do_some_work": "Udfør noget arbejde for at nedsætte din straf, nuværende job: %s",
+    "door_open": "Døren er allerede åben..",
+    "emty_box": "Kassen er tom..",
+    "escaped": "Du flygtede! Se at kom væk i en fart!",
+    "injail": "Du er i spjældet i %s måneder..",
+    "item_missing": "Du mangler en enhed..",
+    "missing_something": "Det ser ud til at du mangler noget...",
+    "not_enough_police": "Ikke nok betjente.."
+  },
+  "info": {
+    "job_interaction": "[E] Electricity Work",
+    "lost_job": "Du er arbejdsløs",
+    "timeleft": "Du har stadig %s måneder tilbage..."
+  },
+  "success": {
+    "found_item": "Du fandt en mobil..",
+    "free_": "Du er fri! Nyd det! :)",
+    "time_cut": "Du fik nedsat din tid for at arbejde.",
+    "timesup": "Din tid er omme! Udskriv dig selv i receptionen"
+  }
+}

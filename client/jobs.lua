@@ -30,14 +30,14 @@ function CreateJobBlip() -- Used globally
     SetBlipAsShortRange(CurrentBlip, true)
     SetBlipColour(CurrentBlip, 1)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(Lang:t("info.work_blip"))
+    AddTextComponentSubstringPlayerName(locale("info.work_blip"))
     EndTextCommandSetBlipName(CurrentBlip)
 end
 
 --- This will set the job as done and give a new location at the same time for you to continue the job and give you some time cut as a reward
 local function onBoxDone()
     if math.random(1, 100) <= 50 then
-        exports.qbx_core:Notify(Lang:t("success.time_cut"))
+        exports.qbx_core:Notify(locale("success.time_cut"))
         JailTime -= math.random(1, 2)
     end
 
@@ -57,7 +57,7 @@ local function startWork()
     isWorking = true
     if lib.progressBar({
         duration = math.random(5000, 10000),
-        label = Lang:t("info.working_electricity"),
+        label = locale("info.working_electricity"),
         useWhileDead = false,
         canCancel = true,
         anim = {
@@ -74,7 +74,7 @@ local function startWork()
     }) then
         onBoxDone()
     else
-        exports.qbx_core:Notify(Lang:t("error.cancelled"), "error")
+        exports.qbx_core:Notify(locale("error.cancelled"), "error")
     end
 
     isWorking = false
@@ -96,7 +96,7 @@ CreateThread(function()
                 options = {
                     {
                         icon = 'fa-solid fa-bolt',
-                        label = Lang:t("info.job_interaction_target", {job = 'Electrician'}),
+                        label = locale("info.job_interaction_target", "Electrician"),
                         canInteract = function()
                             return canInteractWithBox(i)
                         end,
@@ -109,7 +109,7 @@ CreateThread(function()
                 coords = coords,
                 size = vec3(3, 5, 3),
                 onEnter = function()
-                    lib.showTextUI(Lang:t("info.job_interaction"))
+                    lib.showTextUI(locale("info.job_interaction"))
                 end,
                 onExit = function()
                     lib.hideTextUI()

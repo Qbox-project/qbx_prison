@@ -1,0 +1,24 @@
+{
+  "error": {
+    "cancelled": "İşlem İptal Edildi..",
+    "didnt_work": "İşe yaramadı..",
+    "do_some_work": "Ceza indirimi için biraz çalışın, anlık iş: %s",
+    "door_open": "Kapı zaten açık..",
+    "emty_box": "Kutu Boş..",
+    "escaped": "Hapisten Kaçtın... Yokol buradan.!",
+    "injail": "%s aydır hapistesiniz..",
+    "item_missing": "Bir Öğe eksik..",
+    "missing_something": "Bir şeyler eksik gibi görünüyor...",
+    "not_enough_police": "Yeterli polis yok.."
+  },
+  "info": {
+    "lost_job": "Sen işsizsin",
+    "timeleft": "Hala... %s ay var"
+  },
+  "success": {
+    "found_item": "Bir telefon buldun..",
+    "free_": "Özgürsün! Tadını çıkar! :)",
+    "time_cut": "Ceza indirimin için biraz çalıştın.",
+    "timesup": "Süren doldu! Ziyaretçi merkezine gidip çıkışınızı yapın."
+  }
+}

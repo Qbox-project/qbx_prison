@@ -5,12 +5,11 @@ description 'QBX_Prison'
 repository 'https://github.com/Qbox-project/qbx_prison'
 version '1.0.0'
 
+ox_lib 'locale'
+
 shared_scripts {
     '@ox_lib/init.lua',
-    '@qbx_core/modules/utils.lua',
-    '@qbx_core/shared/locale.lua',
-    'locales/en.lua',
-    'locales/*.lua',
+    '@qbx_core/modules/lib.lua',
     'config.lua'
 }
 
@@ -22,6 +21,10 @@ client_scripts {
 }
 
 server_script 'server/main.lua'
+
+files {
+    'locales/*.json'
+}
 
 lua54 'yes'
 use_experimental_fxv2_oal 'yes'

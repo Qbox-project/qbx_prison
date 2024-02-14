@@ -1,0 +1,24 @@
+{
+  "error": {
+    "cancelled": "Prozess abgebrochen..",
+    "didnt_work": "Es hat nicht Funktioniert..",
+    "do_some_work": "Mache etwas Arbeit um deine Haftzeit zu verkürzen, Job: %s",
+    "door_open": "Die Türe ist bereits offen..",
+    "emty_box": "Die Box ist leer..",
+    "escaped": "Du bist ausgebrochen, Schnell weg!",
+    "injail": "Du bist im Gefängnis für %s weitere Monate..",
+    "item_missing": "Dir fehlt ein Gegenstand..",
+    "missing_something": "Es sieht dir aus wie als würde dir was Fehlen...",
+    "not_enough_police": "Nicht genug Polizisten.."
+  },
+  "info": {
+    "lost_job": "Du hast deine Job verloren und bist jetzt Arbeitslos",
+    "timeleft": "Du hast noch %s Monate"
+  },
+  "success": {
+    "found_item": "Du findest ein Handy..",
+    "free_": "Du bist frei, Viel Spaß :)",
+    "time_cut": "Du hast deine Haftzeit verkürzt.",
+    "timesup": "Deine Zeit ist Vorbei, Gehe zum Besucher Zentrum"
+  }
+}

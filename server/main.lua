@@ -8,7 +8,7 @@ local function setJailStatus(src, jailTime)
     if jailTime > 0 then
         if player.PlayerData.job.name ~= "unemployed" then
             player.Functions.SetJob("unemployed")
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.lost_job"))
+            TriggerClientEvent('QBCore:Notify', src, locale("info.lost_job"))
         end
     else
         gotItems[src] = nil
@@ -20,8 +20,8 @@ RegisterNetEvent('prison:server:SetJailStatus', function(jailTime)
 end)
 
 local function jailPlayer(src, minutes)
-    exports.qbx_core:Notify(src, Lang:t("error.injail", {Time = minutes}))
-    exports.qbx_core:Notify(src, Lang:t("info.seized_property"))
+    exports.qbx_core:Notify(src, locale("error.injail", minutes))
+    exports.qbx_core:Notify(src, locale("info.seized_property"))
     exports.ox_inventory:ConfiscateInventory(src)
 
     local player = exports.qbx_core:GetPlayer(src)
@@ -36,7 +36,7 @@ exports('JailPlayer', jailPlayer)
 local function releasePlayer(src)
     setJailStatus(src, 0)
     exports.ox_inventory:ReturnInventory(src)
-    exports.qbx_core:Notify(src, Lang:t("info.received_property"))
+    exports.qbx_core:Notify(src, locale("info.received_property"))
     TriggerClientEvent('qbx_prison:client:playerReleased', src)
 end
 
@@ -85,7 +85,7 @@ end)
 
 RegisterNetEvent('prison:server:JailAlarm', function()
     if alarmActivated then return end
-    local playerPed = GetPlayerPed(source)
+    local playerPed = GetPlayerPed(source --[[@as number]])
     local coords = GetEntityCoords(playerPed)
     local middle = Config.Locations.middle.coords
     if #(coords.xy - middle.xy) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
@@ -99,14 +99,14 @@ end)
 
 ---When player is finished with a job, they have a chance to find a reward
 RegisterNetEvent('qbx_prison:server:completedJob', function()
-    local src = source
+    local src = source --[[@as number]]
     local player = exports.qbx_core:GetPlayer(src)
     if not player or player.PlayerData.metadata.injail == 0 then return end
     if Config.Jobs.electrician.canOnlyGetOneReward and gotItems[src] then return end
     local chance = math.random(100)
     if chance > Config.Jobs.electrician.rewardChance then return end
     if not player.Functions.AddItem(Config.Jobs.electrician.reward, 1) then return end
-    TriggerClientEvent('QBCore:Notify', src, Lang:t('success.found_item', {item = Config.Jobs.electrician.reward}), 'success')
+    TriggerClientEvent('QBCore:Notify', src, locale('success.found_item', Config.Jobs.electrician.reward), 'success')
     gotItems[src] = true
 end)
 

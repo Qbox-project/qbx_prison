@@ -1,0 +1,38 @@
+{
+  "error": {
+    "cancelled": "Voortgang afgebroken..",
+    "didnt_work": "Het heeft niet gewerkt..",
+    "do_some_work": "Werk voor een strafvermindering, huidige baan: %s",
+    "door_open": "De deur staat al open..",
+    "emty_box": "De doos is leeg..",
+    "escaped": "Je bent ontsnapt... Maak dat je wegkomt.!",
+    "injail": "Je zit %s maanden in de gevangenis..",
+    "item_missing": "Je mist een Item..",
+    "missing_something": "Het lijkt alsof je iets mist...",
+    "not_enough_police": "Niet genoeg politie..",
+    "security_activated": "Noodalarm, blijf bij de cellen!"
+  },
+  "info": {
+    "canteen_blip": "Kantine",
+    "cells_blip": "Cellen",
+    "connecting_device": "Apparaat Koppelen",
+    "freedom_blip": "Gevangenis Receptie",
+    "job_interaction_target": "Doe %s Werk",
+    "lost_job": "Je bent Werkloos",
+    "police_alert_description": "Gevangenisuitbraak",
+    "police_alert_title": "Nieuwe Oproep",
+    "received_property": "Je kreeg je eigendommen terug..",
+    "seized_property": "Jouw eigendommen zijn ingenomen, je krijgt ze terug zodra je tijd is verlopen..",
+    "target_canteen_option": "Pak Eten",
+    "target_freedom_option": "Check Tijd",
+    "timeleft": "Je hebt nog... %s maanden",
+    "work_blip": "Gevangeniswerk",
+    "working_electricity": "Draden Vastzetten"
+  },
+  "success": {
+    "found_item": "Je hebt een telefoon gevonden..",
+    "free_": "Je bent vrij! Geniet ervan! :)",
+    "time_cut": "Je hebt wat tijd van je straf gewerkt.",
+    "timesup": "Je tijd is voorbij! Check jezelf uit in het bezoekerscentrum"
+  }
+}

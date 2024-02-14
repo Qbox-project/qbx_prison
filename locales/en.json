@@ -1,0 +1,39 @@
+{
+  "error": {
+    "cancelled": "Process Canceled..",
+    "didnt_work": "It did not work..",
+    "do_some_work": "Do some work for sentence reduction, instant job: %s",
+    "door_open": "The door is already open..",
+    "emty_box": "The Box Is Empty..",
+    "escaped": "You escaped... Get the hell out of here.!",
+    "injail": "You're in jail for %s months..",
+    "item_missing": "You are missing an Item..",
+    "missing_something": "It looks like you are missing something...",
+    "not_enough_police": "Not enough Police..",
+    "security_activated": "Highest security level is active, stay with the cell blocks!"
+  },
+  "info": {
+    "canteen_blip": "Canteen",
+    "cells_blip": "Cells",
+    "connecting_device": "Connecting Device",
+    "freedom_blip": "Jail Front Desk",
+    "job_interaction": "[E] Electricity Work",
+    "job_interaction_target": "Do %s Work",
+    "lost_job": "You're Unemployed",
+    "police_alert_description": "Prison Outbreak",
+    "police_alert_title": "New Call",
+    "received_property": "You got your property back..",
+    "seized_property": "Your property has been seized, you'll get everything back when your time is up..",
+    "target_canteen_option": "Get Food",
+    "target_freedom_option": "Check Time",
+    "timeleft": "You still have to... %s months",
+    "work_blip": "Prison Work",
+    "working_electricity": "Connecting Wires"
+  },
+  "success": {
+    "found_item": "You found a %s..",
+    "free_": "You're free! Enjoy it! :)",
+    "time_cut": "You've worked some time off your sentence.",
+    "timesup": "Your time is up! Check yourself out at the visitors center"
+  }
+}

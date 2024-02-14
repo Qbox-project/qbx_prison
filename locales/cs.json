@@ -1,0 +1,24 @@
+{
+  "error": {
+    "cancelled": "Proces přerušen..",
+    "didnt_work": "Nefunguje to..",
+    "do_some_work": "Udělejte nějakou práci pro snížení trestu, okamžitou práci: %s",
+    "door_open": "Dveře jsou již otevřené..",
+    "emty_box": "Box je prázdný..",
+    "escaped": "Utekl jsi... Vezmi nohy na ramena a utíkej pryč.!",
+    "injail": "Jste ve vězení na %s měsíců..",
+    "item_missing": "Chybí vám item..",
+    "missing_something": "Zdá se, že vám něco chybí...",
+    "not_enough_police": "Nedostatek policejních složek.."
+  },
+  "info": {
+    "lost_job": "Jste nezaměstnaný",
+    "timeleft": "Stále zde budeš... %s měsíců"
+  },
+  "success": {
+    "found_item": "Našel jste telefon..",
+    "free_": "Byl jste propuštěn! Užívejte! :)",
+    "time_cut": "Z trestu jste si odpracoval nějaký čas.",
+    "timesup": "Váš čas ve vězení vypršel! Podívejte se na návštěvnické centrum"
+  }
+}
