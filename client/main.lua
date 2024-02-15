@@ -274,7 +274,7 @@ if not Config.UseTarget then
 			coords = Config.Locations.freedom.coords.xyz,
 			radius = 2.75,
 			onEnter = function()
-				lib.showTextUI('[E] Check Time')
+				lib.showTextUI(locale('info.check_time'))
 			end,
 			onExit = function()
 				lib.hideTextUI()
@@ -285,7 +285,7 @@ if not Config.UseTarget then
 			coords = Config.Locations.shop.coords.xyz,
 			radius = 2.75,
 			onEnter = function()
-				lib.showTextUI('[E] Open Canteen')
+				lib.showTextUI(locale('info.open_canteen'))
 			end,
 			onExit = function()
 				lib.hideTextUI()
