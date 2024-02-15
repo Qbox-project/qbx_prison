@@ -8,7 +8,7 @@ local function setJailStatus(src, jailTime)
     if jailTime > 0 then
         if player.PlayerData.job.name ~= "unemployed" then
             player.Functions.SetJob("unemployed")
-            TriggerClientEvent('QBCore:Notify', src, locale("info.lost_job"))
+            exports.qbx_core.Notify(src, locale("info.lost_job"))
         end
     else
         gotItems[src] = nil
@@ -106,7 +106,7 @@ RegisterNetEvent('qbx_prison:server:completedJob', function()
     local chance = math.random(100)
     if chance > Config.Jobs.electrician.rewardChance then return end
     if not player.Functions.AddItem(Config.Jobs.electrician.reward, 1) then return end
-    TriggerClientEvent('QBCore:Notify', src, locale('success.found_item', Config.Jobs.electrician.reward), 'success')
+    exports.qbx_core.Notify(src, locale('success.found_item', Config.Jobs.electrician.reward), 'success')
     gotItems[src] = true
 end)
 
