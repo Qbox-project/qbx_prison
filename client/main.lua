@@ -196,8 +196,6 @@ local function initPrison(time)
 	end)
 end
 
-
-
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	if QBX.PlayerData.metadata.injail > 0 then
 		initPrison(QBX.PlayerData.metadata.injail)
