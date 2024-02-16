@@ -1,37 +1,20 @@
 local currentGate = 0
 local requiredItems = {}
 local securityLockdown = false
-local gates = {
-    [1] = {
-        gatekey = 13,
-        coords = vector3(1845.99, 2604.7, 45.58),
-        hit = false,
-    },
-    [2] = {
-        gatekey = 14,
-        coords = vector3(1819.47, 2604.67, 45.56),
-        hit = false,
-    },
-    [3] = {
-        gatekey = 15,
-        coords = vector3(1804.74, 2616.311, 45.61),
-        hit = false,
-    }
-}
 
 -- Functions
 
 --- This will be triggered once a hack is done on a gate
 --- @param success boolean
 local function onHackDone(success)
-    TriggerServerEvent('qbx_prison:server:onGateHackDone', success, currentGate, gates[currentGate].gatekey)
+    TriggerServerEvent('qbx_prison:server:onGateHackDone', success, currentGate, Config.gates[currentGate].gatekey)
     TriggerEvent('mhacking:hide')
 end
 
 -- Events
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
-    if currentGate == 0 or securityLockdown or not gates[currentGate].hit then return end
+    if currentGate == 0 or securityLockdown or not Config.gates[currentGate].hit then return end
     local hasItem = exports.ox_inventory:Search('count', 'gatecrack')
     if not hasItem then
         exports.qbx_core:Notify(locale("error.item_missing"), "error")
@@ -99,7 +82,7 @@ RegisterNetEvent('prison:client:PrisonBreakAlert', function()
 end)
 
 RegisterNetEvent('prison:client:SetGateHit', function(key, isHit)
-    gates[key].hit = isHit
+    Config.gates[key].hit = isHit
 end)
 
 RegisterNetEvent('prison:client:JailAlarm', function(toggle)
@@ -136,9 +119,9 @@ local function createGateZones()
         [2] = {name = exports.ox_inventory:Items().gatecrack.name, image = exports.ox_inventory:Items().gatecrack.image},
     }
     currentGate = 0
-    for i = 1, #gates do
+    for i = 1, #Config.gates do
         lib.zones.sphere({
-            coords = gates[i].coords,
+            coords = Config.gates[i].coords,
             radius = 1.5,
             onEnter = function()
                 if QBX.PlayerData.job.type == "leo" then return end
@@ -151,9 +134,9 @@ local function createGateZones()
             end,
             inside = function()
                 if securityLockdown then
-                    qbx.drawText3d({ text = "~r~SYSTEM LOCKDOWN", coords = gates[i].coords })
-                elseif gates[i].hit then
-                    qbx.drawText3d({ text = "SYSTEM BREACH", coords = gates[i].coords })
+                    qbx.drawText3d({ text = "~r~SYSTEM LOCKDOWN", coords = Config.gates[i].coords })
+                elseif Config.gates[i].hit then
+                    qbx.drawText3d({ text = "SYSTEM BREACH", coords = Config.gates[i].coords })
                 end
             end,
         })
