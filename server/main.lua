@@ -25,7 +25,7 @@ local function jailPlayer(src, minutes)
     exports.ox_inventory:ConfiscateInventory(src)
 
     local player = exports.qbx_core:GetPlayer(src)
-    player.Functions.AddMoney('cash', Config.moneyReceived)
+    player.Functions.AddMoney('cash', Config.inJailMoney)
 
     setJailStatus(src, minutes)
     TriggerClientEvent('qbx_prison:client:playerJailed', src, minutes)
