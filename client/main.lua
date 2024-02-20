@@ -10,7 +10,7 @@ local freedomPed = 0
 -- Functions
 
 --- This will create the blips for the cells, time check and shop
-local function createCellsBlip()
+local function createCellsBlip(coords, sprite, text)
     local blip = existingBlip
     
     if DoesBlipExist(blip) then
