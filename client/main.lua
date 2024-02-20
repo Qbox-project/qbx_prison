@@ -11,50 +11,23 @@ local freedomPed = 0
 
 --- This will create the blips for the cells, time check and shop
 local function createCellsBlip()
-	if DoesBlipExist(CellsBlip) then
-		RemoveBlip(CellsBlip)
-	end
-
-	CellsBlip = AddBlipForCoord(Config.Locations.yard.coords.x, Config.Locations.yard.coords.y, Config.Locations.yard.coords.z)
-
-	SetBlipSprite (CellsBlip, 238)
-	SetBlipDisplay(CellsBlip, 4)
-	SetBlipScale  (CellsBlip, 0.8)
-	SetBlipAsShortRange(CellsBlip, true)
-	SetBlipColour(CellsBlip, 4)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(locale("info.cells_blip"))
-	EndTextCommandSetBlipName(CellsBlip)
-
-	if DoesBlipExist(TimeBlip) then
-		RemoveBlip(TimeBlip)
-	end
-
-	TimeBlip = AddBlipForCoord(Config.Locations.freedom.coords.x, Config.Locations.freedom.coords.y, Config.Locations.freedom.coords.z)
-
-	SetBlipSprite(TimeBlip, 466)
-	SetBlipDisplay(TimeBlip, 4)
-	SetBlipScale(TimeBlip, 0.8)
-	SetBlipAsShortRange(TimeBlip, true)
-	SetBlipColour(TimeBlip, 4)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(locale("info.freedom_blip"))
-	EndTextCommandSetBlipName(TimeBlip)
-
-	if DoesBlipExist(ShopBlip) then
-		RemoveBlip(ShopBlip)
-	end
-
-	ShopBlip = AddBlipForCoord(Config.Locations.shop.coords.x, Config.Locations.shop.coords.y, Config.Locations.shop.coords.z)
-
-	SetBlipSprite(ShopBlip, 52)
-	SetBlipDisplay(ShopBlip, 4)
-	SetBlipScale(ShopBlip, 0.5)
-	SetBlipAsShortRange(ShopBlip, true)
-	SetBlipColour(ShopBlip, 0)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(locale("info.canteen_blip"))
-	EndTextCommandSetBlipName(ShopBlip)
+    local blip = existingBlip
+    
+    if DoesBlipExist(blip) then
+        RemoveBlip(blip)
+    end
+    
+    blip = AddBlipForCoord(coords.x, coords.y, coords.z)
+    SetBlipSprite(blip, sprite)
+    SetBlipDisplay(blip, 4)
+    SetBlipScale(blip, 0.8)
+    SetBlipAsShortRange(blip, true)
+    SetBlipColour(blip, 4)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName(text)
+    EndTextCommandSetBlipName(blip)
+    
+    return blip
 end
 
 local function createPrisonBlip()
@@ -178,7 +151,9 @@ local function initPrison(time)
 	CurrentJob = "Electrician"
 	CreateJobBlip()
 	applyClothes()
-	createCellsBlip()
+    createCellsBlip(Config.Locations.yard.coords, 238, locale("info.cells_blip"), CellsBlip)
+    createCellsBlip(Config.Locations.freedom.coords, 466, locale("info.freedom_blip"), TimeBlip)
+    createCellsBlip(Config.Locations.shop.coords, 52, locale("info.canteen_blip"), ShopBlip)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
 
 	CreateThread(function()
