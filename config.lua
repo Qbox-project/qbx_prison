@@ -46,6 +46,9 @@ Config.Locations = {
     prison = {
         {label = 'Prison', coords = vec3(1678.9, 2513.4, 45.6)},
     },
+    takePhoto = {
+        coords = vec3(402.9, -996.7, -100.0)
+    },
     freedom = {
         coords = vector4(1740.88, 2476.57, 44.85, 299.49)
     },
