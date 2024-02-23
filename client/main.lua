@@ -97,6 +97,36 @@ local function turnOnAlarmIfActive()
 	end)
 end
 
+local function takePhoto()
+    DoScreenFadeOut(10)
+    FreezeEntityPosition(cache.ped, true)
+    SetPedComponentVariation(cache.ped, 1, -1, -1, -1)
+    ClearPedProp(cache.ped, 0)
+    Wait(1000)
+    SetEntityCoords(cache.ped, Config.Locations.takePhoto.coords.x, Config.Locations.takePhoto.coords.y, Config.Locations.takePhoto.coords.z)
+    SetEntityHeading(cache.ped, 270.0)
+    Wait(1500) 
+    DoScreenFadeIn(500)
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000) 
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)     
+    SetEntityHeading(cache.ped, -355.74) 
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)  
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)         
+    SetEntityHeading(cache.ped, 170.74) 
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000) 
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)       
+    SetEntityHeading(cache.ped, 270.0)
+    Wait(2000)
+    DoScreenFadeOut(1100)   
+    Wait(2000)
+end
+
 local function release()
 	JailTime = 0
 	InJail = false
@@ -173,6 +203,8 @@ local function spawnNPCsIfNotExisting()
 end
 
 local function initPrison(time)
+    takePhoto()
+    FreezeEntityPosition(cache.ped, false)
 	InJail = true
 	JailTime = time
 	CurrentJob = "Electrician"
