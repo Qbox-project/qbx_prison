@@ -21,6 +21,16 @@ Config.Jobs = {
     }
 }
 
+Config.funnyMessages = {
+    locale('success.and_here_we_go_again'),
+    locale('success.back_to_square_one'),
+    locale('success.ready_to_have_some_fun'),
+    locale('success.find_a_cozy_bed'),
+    locale('success.friendly_neighborhood_troublemaker'),
+    locale('success.back_to_the_ol_ball_and_chain'),
+    locale('success.insert_sad_face'),
+},
+
 Config.Uniforms ={
     male = {
         outfitData ={
