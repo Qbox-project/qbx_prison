@@ -29,7 +29,7 @@ Config.funnyMessages = {
     locale('success.friendly_neighborhood_troublemaker'),
     locale('success.back_to_the_ol_ball_and_chain'),
     locale('success.insert_sad_face'),
-},
+}
 
 Config.Uniforms ={
     male = {
