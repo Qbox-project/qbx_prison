@@ -151,9 +151,9 @@ local function createGateZones()
             end,
             inside = function()
                 if securityLockdown then
-                    qbx.drawText3d({ text = "~r~SYSTEM LOCKDOWN", coords = gates[i].coords })
+                    qbx.drawText3d({ text = "~r~" .. locale('info.system_lockdown'), coords = gates[i].coords })
                 elseif gates[i].hit then
-                    qbx.drawText3d({ text = "SYSTEM BREACH", coords = gates[i].coords })
+                    qbx.drawText3d({ text = locale('info.system_breach'), coords = gates[i].coords })
                 end
             end,
         })

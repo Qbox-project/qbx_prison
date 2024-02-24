@@ -26,6 +26,10 @@
     "seized_property": "Your property has been seized, you'll get everything back when your time is up..",
     "target_canteen_option": "Get Food",
     "target_freedom_option": "Check Time",
+    "check_time": "[E] Check Time",
+    "open_canteen": "[E] Open Canteen",
+    "system_lockdown": "SYSTEM LOCKDOWN",
+    "system_breach": "SYSTEM BREACH",
     "timeleft": "You still have to... %s months",
     "work_blip": "Prison Work",
     "working_electricity": "Connecting Wires"

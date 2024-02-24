@@ -2,38 +2,38 @@
   "error": {
     "cancelled": "Proceso cancelado..",
     "didnt_work": "No funcionó..",
-    "do_some_work": "Haz algún trabajo para la reducción de la condena, trabajo instantáneo: %s",
+    "do_some_work": "Haz algo de trabajo para reducir la oración, trabajo instantáneo: %s",
     "door_open": "La puerta ya está abierta..",
     "emty_box": "La caja está vacía..",
-    "escaped": "Te has escapado... Sal de aquí.",
-    "injail": "Estás en la cárcel durante %s meses..",
-    "item_missing": "Te falta un objeto..",
+    "escaped": "Escapaste... ¡Sal de aquí.!",
+    "injail": "Estás en la cárcel por %s meses..",
+    "item_missing": "Te falta un artículo..",
     "missing_something": "Parece que te falta algo...",
     "not_enough_police": "No hay suficiente policía..",
-    "security_activated": "¡El nivel de seguridad más alto está activado, quédate con los bloques de celdas!"
+    "security_activated": "Se ha activado el nivel de seguridad más alto, ¡quédate con las celdas!"
   },
   "info": {
-    "canteen_blip": "Comedor",
+    "canteen_blip": "Cafetería",
     "cells_blip": "Celdas",
     "connecting_device": "Dispositivo de conexión",
     "freedom_blip": "Recepción de la cárcel",
-    "job_interaction": "Trabajo de Electricidad",
-    "job_interaction_target": "Haz %s Trabajo",
-    "lost_job": "Estás en el paro",
-    "police_alert_description": "Brote de prisión",
+    "job_interaction": "[E] Trabajo de electricidad",
+    "job_interaction_target": "Hacer trabajo %s",
+    "lost_job": "Estás desempleado",
+    "police_alert_description": "Rebelión en la prisión",
     "police_alert_title": "Nueva llamada",
-    "received_property": "Has recuperado tu propiedad...",
-    "seized_property": "Tu propiedad ha sido confiscada, lo recuperarás todo cuando se cumpla tu tiempo..",
-    "target_canteen_option": "Conseguir comida",
-    "target_freedom_option": "Hora de la revisión",
-    "timeleft": "Todavía tienes que... %s meses",
-    "work_blip": "Trabajo en la cárcel",
+    "received_property": "Recuperaste tu propiedad..",
+    "seized_property": "Tu propiedad ha sido confiscada, la recuperarás cuando se acabe tu tiempo..",
+    "target_canteen_option": "Obtener comida",
+    "target_freedom_option": "Ver la hora",
+    "timeleft": "Todavía te quedan... %s meses",
+    "work_blip": "Trabajo en la prisión",
     "working_electricity": "Conexión de cables"
   },
   "success": {
-    "found_item": "Has encontrado un teléfono..",
-    "free_": "¡Eres libre! ¡Disfrútalo! :)",
-    "time_cut": "Has rebajado algo de tiempo de tu condena",
-    "timesup": "¡Tu tiempo se ha acabado! Comprueba tu estado en el centro de visitantes"
+    "found_item": "Encontraste un %s..",
+    "free_": "¡Estás libre! ¡Disfrútalo! :)",
+    "time_cut": "Has trabajado algo de tiempo para reducir tu sentencia.",
+    "timesup": "¡Se acabó tu tiempo! Revísate en el centro de visitantes"
   }
 }
