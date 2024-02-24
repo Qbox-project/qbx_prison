@@ -175,7 +175,6 @@ end
 local function initPrison(time)
 	InJail = true
 	JailTime = time
-	CurrentJob = "Electrician"
 	CreateJobBlip()
 	applyClothes()
 	createCellsBlip()
