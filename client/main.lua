@@ -129,9 +129,9 @@ local function openCanteen()
 	exports.ox_inventory:openInventory('shop', { type = 'Canteen', id = 1})
 end
 
-local function pedCreate(pedModel, x, y, z, heading, scenario)
+local function pedCreate(pedModel, position, scenario)
     local model = lib.requestModel(pedModel)
-    local entity = CreatePed(0, model, x, y, z, heading, false, true)
+    local entity = CreatePed(0, model, position.x, position.y, position.z, position.w, false, true)
 
     if scenario then
         TaskStartScenarioInPlace(entity, scenario, 0, true)
@@ -148,8 +148,8 @@ end
 local function spawnNPCsIfNotExisting()
 	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
 
-	freedomPed = pedCreate('s_m_m_armoured_01', Config.Locations.freedom.coords.x, Config.Locations.freedom.coords.y, Config.Locations.freedom.coords.z, Config.Locations.freedom.coords.w, 'WORLD_HUMAN_CLIPBOARD')
-	canteenPed = pedCreate('s_m_m_armoured_01', Config.Locations.shop.coords.x, Config.Locations.shop.coords.y, Config.Locations.shop.coords.z, Config.Locations.shop.coords.w, 'WORLD_HUMAN_CLIPBOARD')
+	freedomPed = pedCreate('s_m_m_armoured_01', Config.Locations.freedom.coords, 'WORLD_HUMAN_CLIPBOARD')
+	canteenPed = pedCreate('s_m_m_armoured_01', Config.Locations.shop.coords, 'WORLD_HUMAN_CLIPBOARD')
 
 	if not Config.UseTarget then return end
 
