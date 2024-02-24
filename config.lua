@@ -21,7 +21,7 @@ Config.Jobs = {
     }
 }
 
-Config.funnyMessages = {
+Config.introMessages = {
     locale('success.and_here_we_go_again'),
     locale('success.back_to_square_one'),
     locale('success.ready_to_have_some_fun'),
