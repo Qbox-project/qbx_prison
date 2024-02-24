@@ -34,6 +34,13 @@
     "found_item": "You found a %s..",
     "free_": "You're free! Enjoy it! :)",
     "time_cut": "You've worked some time off your sentence.",
-    "timesup": "Your time is up! Check yourself out at the visitors center"
+    "timesup": "Your time is up! Check yourself out at the visitors center",
+    "and_here_we_go_again": "And here we go again...",
+    "back_to_square_one": "Looks like we're back to square one :(",
+    "ready_to_have_some_fun": "Hey there, ready to have some fun with DOC?",
+    "find_a_cozy_bed": "Find a cozy bed, we're going to be here for a while",
+    "friendly_neighborhood_troublemaker": "Just your friendly neighborhood troublemaker",
+    "back_to_the_ol_ball_and_chain": "Back to the ol' ball and chain",
+    "insert_sad_face": "Insert sad face here"
   }
 }
