@@ -203,7 +203,9 @@ local function spawnNPCsIfNotExisting()
 end
 
 local function initPrison(time)
-    takePhoto()
+    if Config.takePhoto then	
+        takePhoto()
+    end
     FreezeEntityPosition(cache.ped, false)
 	InJail = true
 	JailTime = time
