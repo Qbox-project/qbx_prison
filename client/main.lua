@@ -11,13 +11,11 @@ local freedomPed = 0
 
 --- This will create the blips for the cells, time check and shop
 local function createCellsBlip(coords, sprite, text)
-    local blip = existingBlip
-    
-    if DoesBlipExist(blip) then
-        RemoveBlip(blip)
+    if existingBlip and DoesBlipExist(existingBlip) then
+        RemoveBlip(existingBlip)
     end
     
-    blip = AddBlipForCoord(coords.x, coords.y, coords.z)
+    local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(blip, sprite)
     SetBlipDisplay(blip, 4)
     SetBlipScale(blip, 0.8)
