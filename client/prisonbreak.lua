@@ -31,6 +31,10 @@ end
 -- Events
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
+    if QBX.PlayerData.job.type == 'leo' and QBX.PlayerData.job.onduty < Config.minPolice then
+        exports.qbx_core:Notify(locale('error.minimum_police_required'), "error")
+        return
+    end
     if currentGate == 0 or securityLockdown or not gates[currentGate].hit then return end
     local hasItem = exports.ox_inventory:Search('count', 'gatecrack')
     if not hasItem then
