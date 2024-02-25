@@ -179,6 +179,7 @@ local function initPrison(time)
 	CreateJobBlip()
 	applyClothes()
 	createCellsBlip()
+	exports.qbx_core:Notify(Config.introMessages[math.random(1, #Config.introMessages)], "inform", 10000)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
 
 	CreateThread(function()
