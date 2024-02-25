@@ -119,9 +119,9 @@ local function createGateZones()
         [2] = {name = exports.ox_inventory:Items().gatecrack.name, image = exports.ox_inventory:Items().gatecrack.image},
     }
     currentGate = 0
-    for i = 1, #gates do
+    for i = 1, #Config.gates do
         lib.zones.sphere({
-            coords = gates[i].coords,
+            coords = Config.gates[i].coords,
             radius = 1.5,
             onEnter = function()
                 if QBX.PlayerData.job.type == "leo" then return end
@@ -134,9 +134,9 @@ local function createGateZones()
             end,
             inside = function()
                 if securityLockdown then
-                    qbx.drawText3d({ text = "~r~" .. locale('info.system_lockdown'), coords = gates[i].coords })
-                elseif gates[i].hit then
-                    qbx.drawText3d({ text = locale('info.system_breach'), coords = gates[i].coords })
+                    qbx.drawText3d({ text = "~r~" .. locale('info.system_lockdown'), coords = Config.gates[i].coords })
+                elseif Config.gates[i].hit then
+                    qbx.drawText3d({ text = locale('info.system_breach'), coords = Config.gates[i].coords })
                 end
             end,
         })
