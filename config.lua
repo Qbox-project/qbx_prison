@@ -2,6 +2,8 @@ Config = {}
 
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use ox_target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
 
+Config.inJailMoney = 80
+
 Config.Jobs = {
     electrician = {
         locations = {
@@ -35,6 +37,16 @@ Config.gates = {
         coords = vector3(1804.74, 2616.311, 45.61),
         hit = false,
     }
+}
+
+Config.introMessages = {
+    locale('success.and_here_we_go_again'),
+    locale('success.back_to_square_one'),
+    locale('success.ready_to_have_some_fun'),
+    locale('success.find_a_cozy_bed'),
+    locale('success.friendly_neighborhood_troublemaker'),
+    locale('success.back_to_the_ol_ball_and_chain'),
+    locale('success.insert_sad_face'),
 }
 
 Config.Uniforms ={

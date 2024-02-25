@@ -129,23 +129,27 @@ local function openCanteen()
 	exports.ox_inventory:openInventory('shop', { type = 'Canteen', id = 1})
 end
 
+local function pedCreate(pedModel, position, scenario)
+    local model = lib.requestModel(pedModel)
+    local entity = CreatePed(0, model, position.x, position.y, position.z, position.w, false, true)
+
+    if scenario then
+        TaskStartScenarioInPlace(entity, scenario, 0, true)
+    end
+
+    SetModelAsNoLongerNeeded(model)
+    FreezeEntityPosition(entity, true)
+    SetEntityInvincible(entity, true)
+    SetBlockingOfNonTemporaryEvents(entity, true)
+
+    return entity
+end
+
 local function spawnNPCsIfNotExisting()
 	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
 
-	local pedModel = `s_m_m_armoured_01`
-	lib.requestModel(pedModel)
-
-	freedomPed = CreatePed(0, pedModel, Config.Locations.freedom.coords.x, Config.Locations.freedom.coords.y, Config.Locations.freedom.coords.z, Config.Locations.freedom.coords.w, false, true)
-	FreezeEntityPosition(freedomPed, true)
-	SetEntityInvincible(freedomPed, true)
-	SetBlockingOfNonTemporaryEvents(freedomPed, true)
-	TaskStartScenarioInPlace(freedomPed, 'WORLD_HUMAN_CLIPBOARD', 0, true)
-
-	canteenPed = CreatePed(0, pedModel, Config.Locations.shop.coords.x, Config.Locations.shop.coords.y, Config.Locations.shop.coords.z, Config.Locations.shop.coords.w, false, true)
-	FreezeEntityPosition(canteenPed, true)
-	SetEntityInvincible(canteenPed, true)
-	SetBlockingOfNonTemporaryEvents(canteenPed, true)
-	TaskStartScenarioInPlace(canteenPed, 'WORLD_HUMAN_CLIPBOARD', 0, true)
+	freedomPed = pedCreate('s_m_m_armoured_01', Config.Locations.freedom.coords, 'WORLD_HUMAN_CLIPBOARD')
+	canteenPed = pedCreate('s_m_m_armoured_01', Config.Locations.shop.coords, 'WORLD_HUMAN_CLIPBOARD')
 
 	if not Config.UseTarget then return end
 
@@ -179,6 +183,7 @@ local function initPrison(time)
 	CreateJobBlip()
 	applyClothes()
 	createCellsBlip()
+	exports.qbx_core:Notify(Config.introMessages[math.random(1, #Config.introMessages)], "inform", 10000)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
 
 	CreateThread(function()
@@ -195,8 +200,6 @@ local function initPrison(time)
 		end
 	end)
 end
-
-
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	if QBX.PlayerData.metadata.injail > 0 then
@@ -274,7 +277,7 @@ if not Config.UseTarget then
 			coords = Config.Locations.freedom.coords.xyz,
 			radius = 2.75,
 			onEnter = function()
-				lib.showTextUI('[E] Check Time')
+				lib.showTextUI(locale('info.check_time'))
 			end,
 			onExit = function()
 				lib.hideTextUI()
@@ -285,7 +288,7 @@ if not Config.UseTarget then
 			coords = Config.Locations.shop.coords.xyz,
 			radius = 2.75,
 			onEnter = function()
-				lib.showTextUI('[E] Open Canteen')
+				lib.showTextUI(locale('info.open_canteen'))
 			end,
 			onExit = function()
 				lib.hideTextUI()

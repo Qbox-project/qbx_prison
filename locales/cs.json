@@ -1,24 +1,39 @@
 {
   "error": {
-    "cancelled": "Proces přerušen..",
-    "didnt_work": "Nefunguje to..",
-    "do_some_work": "Udělejte nějakou práci pro snížení trestu, okamžitou práci: %s",
+    "cancelled": "Proces zrušen..",
+    "didnt_work": "Nefungovalo to..",
+    "do_some_work": "Proveďte nějakou práci na snížení věty, okamžitá práce: %s",
     "door_open": "Dveře jsou již otevřené..",
-    "emty_box": "Box je prázdný..",
-    "escaped": "Utekl jsi... Vezmi nohy na ramena a utíkej pryč.!",
-    "injail": "Jste ve vězení na %s měsíců..",
-    "item_missing": "Chybí vám item..",
-    "missing_something": "Zdá se, že vám něco chybí...",
-    "not_enough_police": "Nedostatek policejních složek.."
+    "emty_box": "Skrýš je prázdná..",
+    "escaped": "Unikl jsi... Schovej se odtud.!",
+    "injail": "Jste ve vězení %s měsíců..",
+    "item_missing": "Chybí vám položka..",
+    "missing_something": "Vypadá to, že vám něco chybí...",
+    "not_enough_police": "Nedostatek policie..",
+    "security_activated": "Nejvyšší úroveň bezpečnosti je aktivní, zůstaňte u bloků cel!"
   },
   "info": {
+    "canteen_blip": "Jídelna",
+    "cells_blip": "Cely",
+    "connecting_device": "Připojovací zařízení",
+    "freedom_blip": "Přední pult vězení",
+    "job_interaction": "[E] Práce s elektřinou",
+    "job_interaction_target": "Vykonat práci %s",
     "lost_job": "Jste nezaměstnaný",
-    "timeleft": "Stále zde budeš... %s měsíců"
+    "police_alert_description": "Výtržnost ve vězení",
+    "police_alert_title": "Nový hovor",
+    "received_property": "Získali jste zpět svůj majetek..",
+    "seized_property": "Váš majetek byl zabaven, dostanete ho zpět po skončení vašeho času..",
+    "target_canteen_option": "Dostat jídlo",
+    "target_freedom_option": "Zkontrolovat čas",
+    "timeleft": "Máte stále... %s měsíců",
+    "work_blip": "Pracovní náplň ve vězení",
+    "working_electricity": "Připojení kabelů"
   },
   "success": {
-    "found_item": "Našel jste telefon..",
-    "free_": "Byl jste propuštěn! Užívejte! :)",
-    "time_cut": "Z trestu jste si odpracoval nějaký čas.",
-    "timesup": "Váš čas ve vězení vypršel! Podívejte se na návštěvnické centrum"
+    "found_item": "Našel jste %s..",
+    "free_": "Jste volný! Užijte si to! :)",
+    "time_cut": "Pracovali jste nějaký čas na zkrácení vaší věty.",
+    "timesup": "Váš čas vypršel! Zkontrolujte se v centru pro návštěvníky"
   }
 }
