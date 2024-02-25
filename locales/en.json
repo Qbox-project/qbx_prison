@@ -26,6 +26,10 @@
     "seized_property": "Your property has been seized, you'll get everything back when your time is up..",
     "target_canteen_option": "Get Food",
     "target_freedom_option": "Check Time",
+    "check_time": "[E] Check Time",
+    "open_canteen": "[E] Open Canteen",
+    "system_lockdown": "SYSTEM LOCKDOWN",
+    "system_breach": "SYSTEM BREACH",
     "timeleft": "You still have to... %s months",
     "work_blip": "Prison Work",
     "working_electricity": "Connecting Wires"
@@ -34,6 +38,13 @@
     "found_item": "You found a %s..",
     "free_": "You're free! Enjoy it! :)",
     "time_cut": "You've worked some time off your sentence.",
-    "timesup": "Your time is up! Check yourself out at the visitors center"
+    "timesup": "Your time is up! Check yourself out at the visitors center",
+    "and_here_we_go_again": "And here we go again...",
+    "back_to_square_one": "Looks like we're back to square one :(",
+    "ready_to_have_some_fun": "Hey there, ready to have some fun with DOC?",
+    "find_a_cozy_bed": "Find a cozy bed, we're going to be here for a while",
+    "friendly_neighborhood_troublemaker": "Just your friendly neighborhood troublemaker",
+    "back_to_the_ol_ball_and_chain": "Back to the ol' ball and chain",
+    "insert_sad_face": "Insert sad face here"
   }
 }

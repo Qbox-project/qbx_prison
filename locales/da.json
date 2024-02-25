@@ -1,25 +1,39 @@
 {
   "error": {
-    "cancelled": "Handlingen afbrudt..",
+    "cancelled": "Processen annulleret..",
     "didnt_work": "Det virkede ikke..",
-    "do_some_work": "Udfør noget arbejde for at nedsætte din straf, nuværende job: %s",
+    "do_some_work": "Udfør noget arbejde for at reducere sætningen, øjeblikkelig opgave: %s",
     "door_open": "Døren er allerede åben..",
     "emty_box": "Kassen er tom..",
-    "escaped": "Du flygtede! Se at kom væk i en fart!",
-    "injail": "Du er i spjældet i %s måneder..",
-    "item_missing": "Du mangler en enhed..",
-    "missing_something": "Det ser ud til at du mangler noget...",
-    "not_enough_police": "Ikke nok betjente.."
+    "escaped": "Du undslap... Kom helvede væk herfra.!",
+    "injail": "Du er i fængsel i %s måneder..",
+    "item_missing": "Du mangler en genstand..",
+    "missing_something": "Det ser ud til, at du mangler noget...",
+    "not_enough_police": "Ikke nok politi..",
+    "security_activated": "Højeste sikkerhedsniveau er aktivt, bliv hos celleblokkene!"
   },
   "info": {
-    "job_interaction": "[E] Electricity Work",
+    "canteen_blip": "Kantine",
+    "cells_blip": "Celler",
+    "connecting_device": "Forbindelsesenhed",
+    "freedom_blip": "Fængslets hovedkontor",
+    "job_interaction": "[E] Elektricitetsarbejde",
+    "job_interaction_target": "Udfør %s arbejde",
     "lost_job": "Du er arbejdsløs",
-    "timeleft": "Du har stadig %s måneder tilbage..."
+    "police_alert_description": "Fængselsoprør",
+    "police_alert_title": "Nyt opkald",
+    "received_property": "Du har fået din ejendom tilbage..",
+    "seized_property": "Din ejendom er blevet beslaglagt, du får alt tilbage, når din tid er op..",
+    "target_canteen_option": "Få mad",
+    "target_freedom_option": "Tjek tid",
+    "timeleft": "Du har stadig tilbage... %s måneder",
+    "work_blip": "Fængselsarbejde",
+    "working_electricity": "Tilslutning af ledninger"
   },
   "success": {
-    "found_item": "Du fandt en mobil..",
+    "found_item": "Du fandt en %s..",
     "free_": "Du er fri! Nyd det! :)",
-    "time_cut": "Du fik nedsat din tid for at arbejde.",
-    "timesup": "Din tid er omme! Udskriv dig selv i receptionen"
+    "time_cut": "Du har arbejdet noget tid til din sætning.",
+    "timesup": "Din tid er op! Tjek dig selv på besøgscentret"
   }
 }
