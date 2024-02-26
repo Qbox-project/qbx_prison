@@ -16,7 +16,7 @@ local function newRandomArray(size)
     return array
 end
 
-function CreateJobBlip()
+local function CreateJobBlip()
     if DoesBlipExist(CurrentBlip) then
         RemoveBlip(CurrentBlip)
     end
@@ -115,7 +115,7 @@ CreateThread(function()
                     coords = coords,
                     size = vec3(3, 5, 3),
                     onEnter = function()
-                        lib.showTextUI(locale("info.job_interaction"))
+                        lib.showTextUI(locale("info.job_interaction", prisonJob))
                     end,
                     onExit = function()
                         lib.hideTextUI()
