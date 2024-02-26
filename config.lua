@@ -72,11 +72,11 @@ Config.Locations = {
         coords = vector4(1777.59, 2560.52, 44.62, 187.83)
     },
     spawns = {
-        {coords = vec4(1745.77, 2489.61, 50.41, 212.01), animation = "bumsleep"},
-        {coords = vec4(1751.86, 2492.73, 50.44, 213.77), animation = "lean"},
-        {coords = vec4(1760.82, 2498.14, 50.42, 208.26), animation = "sitchair4"},
-        {coords = vec4(1754.85, 2494.59, 45.82, 212.49), animation = "finger2"},
-        {coords = vec4(1748.84, 2491.35, 45.80, 203.43), animation = "smoke"}
+        {coords = vec4(1745.77, 2489.61, 50.41, 212.01), animation = 'bumsleep'},
+        {coords = vec4(1751.86, 2492.73, 50.44, 213.77), animation = 'lean'},
+        {coords = vec4(1760.82, 2498.14, 50.42, 208.26), animation = 'sitchair4'},
+        {coords = vec4(1754.85, 2494.59, 45.82, 212.49), animation = 'finger2'},
+        {coords = vec4(1748.84, 2491.35, 45.80, 203.43), animation = 'smoke'}
     }
 }
 
