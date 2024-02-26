@@ -44,7 +44,7 @@ local function onTaskDone()
         currentTask = 1
         TriggerServerEvent('qbx_prison:server:completedJob')
     else
-        currentTask = currentTask + 1
+        currentTask += 1
     end
 
     CreateJobBlip()
