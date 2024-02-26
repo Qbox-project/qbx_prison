@@ -87,11 +87,9 @@ function chooseJob(job)
     jobLocations = newRandomArray(#Config.Jobs[prisonJob].locations)
 end
 
-function getPrisonJob()
+exports('getPrisonJob', function()
     return prisonJob
-end
-
-exports("getPrisonJob", getPrisonJob)
+end)
 
 CreateThread(function()
     if prisonJob then
