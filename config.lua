@@ -72,50 +72,11 @@ Config.Locations = {
         coords = vector4(1777.59, 2560.52, 44.62, 187.83)
     },
     spawns = {
-        {
-            animation = "bumsleep",
-            coords = vector4(1661.046, 2524.681, 45.564, 260.545)
-        },
-        {
-            animation = "lean",
-            coords = vector4(1650.812, 2540.582, 45.564, 230.436)
-        },
-        {
-            animation = "lean",
-            coords = vector4(1654.959, 2545.535, 45.564, 230.436)
-        },
-        {
-            animation = "lean",
-            coords = vector4(1697.106, 2525.558, 45.564, 187.208)
-        },
-        {
-            animation = "sitchair4",
-            coords = vector4(1673.084, 2519.823, 45.564, 229.542)
-        },
-        {
-            animation = "sitchair",
-            coords = vector4(1666.029, 2511.367, 45.564, 233.888)
-        },
-        {
-            animation = "sitchair4",
-            coords = vector4(1691.229, 2509.635, 45.564, 52.432)
-        },
-        {
-            animation = "finger2",
-            coords = vector4(1770.59, 2536.064, 45.564, 258.113)
-        },
-        {
-            animation = "smoke",
-            coords = vector4(1792.45, 2584.37, 45.56, 276.24)
-        },
-        {
-            animation = "smoke",
-            coords = vector4(1768.33, 2566.08, 45.56, 176.83)
-        },
-        {
-            animation = "smoke",
-            coords = vector4(1696.09, 2469.4, 45.56, 1.4)
-        }
+        {coords = vec4(1745.77, 2489.61, 50.41, 212.01), animation = "bumsleep"},
+        {coords = vec4(1751.86, 2492.73, 50.44, 213.77), animation = "lean"},
+        {coords = vec4(1760.82, 2498.14, 50.42, 208.26), animation = "sitchair4"},
+        {coords = vec4(1754.85, 2494.59, 45.82, 212.49), animation = "finger2"},
+        {coords = vec4(1748.84, 2491.35, 45.80, 203.43), animation = "smoke"}
     }
 }
 
