@@ -32,7 +32,7 @@ end
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
     if currentGate == 0 or securityLockdown or not gates[currentGate].hit then return end
-    local hasItem = exports.ox_inventory:Search('count', 'gatecrack')
+    local hasItem = exports.ox_inventory:Search('count', Config.gateCrack)
     if not hasItem then
         exports.qbx_core:Notify(locale("error.item_missing"), "error")
         return
