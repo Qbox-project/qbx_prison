@@ -57,19 +57,19 @@ Config.Locations = {
         {label = 'Prison', coords = vec3(1678.9, 2513.4, 45.6)},
     },
     freedom = {
-        coords = vector4(1740.88, 2476.57, 44.85, 299.49)
+        coords = vec4(1775.73, 2551.97, 44.60, 85.57)
     },
     outside = {
-        coords = vector4(1848.13, 2586.05, 44.67, 269.5)
+        coords = vec4(1848.13, 2586.05, 44.67, 269.5)
     },
     yard = {
-        coords = vector4(1765.67, 2565.91, 44.56, 1.5)
+        coords = vec4(1765.67, 2565.91, 44.56, 1.5)
     },
     middle = {
         coords = vec3(1693.33, 2569.51, 44.55)
     },
     shop = {
-        coords = vector4(1777.59, 2560.52, 44.62, 187.83)
+        coords = vec4(1752.99, 2566.99, 44.60, 231.94)
     },
     spawns = {
         {coords = vec4(1745.77, 2489.61, 50.41, 212.01), animation = 'bumsleep'},
