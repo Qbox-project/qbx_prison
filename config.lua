@@ -122,12 +122,12 @@ Config.Locations = {
 
 Config.CanteenItems = {
     {
-        name = "sandwich",
+        name = "burger",
         price = 4,
         count = 50,
     },
     {
-        name = "water_bottle",
+        name = "water",
         price = 4,
         count = 50,
     }
