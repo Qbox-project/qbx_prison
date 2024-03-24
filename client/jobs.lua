@@ -54,13 +54,13 @@ local function startWork()
     isWorking = true
     if lib.progressBar({
         duration = math.random(5000, 10000),
-        label = locale("info.working_electricity"),
+        label = locale(Config.Jobs[prisonJob].label),
         useWhileDead = false,
         canCancel = true,
         anim = {
-            dict = "anim@gangops@facility@servers@",
-            clip = "hotwire",
-            flag = 16
+            dict = Config.Jobs[prisonJob].dict,
+            clip = Config.Jobs[prisonJob].clip,
+            flag = Config.Jobs[prisonJob].flag,
         },
         disable = {
             move = true,
@@ -75,7 +75,7 @@ local function startWork()
     end
 
     isWorking = false
-    StopAnimTask(cache.ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
+    StopAnimTask(cache.ped, Config.Jobs[prisonJob].dict, Config.Jobs[prisonJob].clip, 1.0)
 end
 
 local function canInteractWithTask(i)
