@@ -3,6 +3,7 @@ Config = {}
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use ox_target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
 
 Config.inJailMoney = 80
+Config.takePhoto = true
 Config.gateCrack = 'gatecrack'
 
 Config.Jobs = {
@@ -56,6 +57,9 @@ Config.Uniforms ={
 Config.Locations = {
     prison = {
         {label = 'Prison', coords = vec3(1678.9, 2513.4, 45.6)},
+    },
+    takePhoto = {
+        coords = vec3(402.9, -996.7, -100.0)
     },
     freedom = {
         coords = vec4(1775.73, 2551.97, 44.60, 85.57)
