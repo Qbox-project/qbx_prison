@@ -1,5 +1,5 @@
 local prisonJob = nil
-local CurrentBlip = 0
+local currentBlip = 0
 local isWorking = false
 local jobLocations
 local currentTask = 1
@@ -16,21 +16,21 @@ local function newRandomArray(size)
     return array
 end
 
-local function CreateJobBlip()
-    if DoesBlipExist(CurrentBlip) then
-        RemoveBlip(CurrentBlip)
+local function createJobBlip()
+    if DoesBlipExist(currentBlip) then
+        RemoveBlip(currentBlip)
     end
 
     local coords = Config.Jobs[prisonJob].locations[currentTask]
-    CurrentBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
-    SetBlipSprite(CurrentBlip, 402)
-    SetBlipDisplay(CurrentBlip, 4)
-    SetBlipScale(CurrentBlip, 0.8)
-    SetBlipAsShortRange(CurrentBlip, true)
-    SetBlipColour(CurrentBlip, 1)
+    currentBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
+    SetBlipSprite(currentBlip, 402)
+    SetBlipDisplay(currentBlip, 4)
+    SetBlipScale(currentBlip, 0.8)
+    SetBlipAsShortRange(currentBlip, true)
+    SetBlipColour(currentBlip, 1)
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentSubstringPlayerName(locale("info.work_blip"))
-    EndTextCommandSetBlipName(CurrentBlip)
+    EndTextCommandSetBlipName(currentBlip)
 end
 
 local function onTaskDone()
@@ -47,7 +47,7 @@ local function onTaskDone()
         currentTask += 1
     end
 
-    CreateJobBlip()
+    createJobBlip()
 end
 
 local function startWork()
@@ -101,8 +101,8 @@ CreateThread(function()
                     size = vec3(1.5, 1.6, 5),
                     options = {
                         {
-                            icon = 'fa-solid fa-bolt',
-                            label = locale("info.job_interaction_target", prisonJob),
+                            icon = Config.Jobs[prisonJob].icon,
+                            label = locale("info.job_interaction_target", prisonJob.label),
                             canInteract = function()
                                 return canInteractWithTask(i)
                             end,
