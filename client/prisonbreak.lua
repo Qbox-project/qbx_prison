@@ -14,7 +14,7 @@ end
 -- Events
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
-    if currentGate == 0 or securityLockdown or not gates[currentGate].hit then return end
+    if currentGate == 0 or securityLockdown or not gates[currentGate].gatesHit then return end
     local hasItem = exports.ox_inventory:Search('count', Config.gateCrack)
 
     if not hasItem then
@@ -83,7 +83,7 @@ RegisterNetEvent('prison:client:PrisonBreakAlert', function()
 end)
 
 RegisterNetEvent('prison:client:SetGateHit', function(key, isHit)
-    Config.gates[key].hit = isHit
+    Config.gates[key].gatesHit = isHit
 end)
 
 RegisterNetEvent('prison:client:JailAlarm', function(toggle)
@@ -136,7 +136,7 @@ local function createGateZones()
             inside = function()
                 if securityLockdown then
                     qbx.drawText3d({ text = "~r~" .. locale('info.system_lockdown'), coords = Config.gates[i].coords })
-                elseif Config.gates[i].hit then
+                elseif Config.gates[i].gatesHit then
                     qbx.drawText3d({ text = locale('info.system_breach'), coords = Config.gates[i].coords })
                 end
             end,
