@@ -74,14 +74,13 @@ end
 -- Add clothes to prisioner
 
 local function applyClothes()
-	local playerPed = cache.ped
-	if not DoesEntityExist(playerPed) then return end
+	if not DoesEntityExist(cache.ped) then return end
 	CreateThread(function()
-		SetPedArmour(playerPed, 0)
-		ClearPedBloodDamage(playerPed)
-		ResetPedVisibleDamage(playerPed)
-		ClearPedLastWeaponDamage(playerPed)
-		ResetPedMovementClipset(playerPed, 0)
+		SetPedArmour(cache.ped, 0)
+		ClearPedBloodDamage(cache.ped)
+		ResetPedVisibleDamage(cache.ped)
+		ClearPedLastWeaponDamage(cache.ped)
+		ResetPedMovementClipset(cache.ped, 0)
 		if QBX.PlayerData.charinfo.gender == 0 then
 			TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.male)
 		else
