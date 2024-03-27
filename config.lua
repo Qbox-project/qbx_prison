@@ -26,17 +26,17 @@ Config.gates = {
     [1] = {
         gatekey = 13,
         coords = vector3(1845.99, 2604.7, 45.58),
-        hit = false,
+        gatesHit = false,
     },
     [2] = {
         gatekey = 14,
         coords = vector3(1819.47, 2604.67, 45.56),
-        hit = false,
+        gatesHit = false,
     },
     [3] = {
         gatekey = 15,
         coords = vector3(1804.74, 2616.311, 45.61),
-        hit = false,
+        gatesHit = false,
     }
 }
 
