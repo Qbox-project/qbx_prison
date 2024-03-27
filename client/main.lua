@@ -10,7 +10,7 @@ local freedomPed = 0
 -- Functions
 
 --- This will create the blips for the cells, time check and shop
-local function createCellsBlip(coords, sprite, text, existingBlip)
+local function createCellsBlip(coords, sprite, text, existingBlip, size)
     if existingBlip and DoesBlipExist(existingBlip) then
         RemoveBlip(existingBlip)
     end
@@ -18,7 +18,7 @@ local function createCellsBlip(coords, sprite, text, existingBlip)
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(blip, sprite)
     SetBlipDisplay(blip, 4)
-    SetBlipScale(blip, 0.8)
+    SetBlipScale(blip, size)
     SetBlipAsShortRange(blip, true)
     SetBlipColour(blip, 4)
     BeginTextCommandSetBlipName("STRING")
@@ -153,9 +153,9 @@ local function initPrison(time)
 	CurrentJob = "Electrician"
 	CreateJobBlip()
 	applyClothes()
-	createCellsBlip(Config.Locations.yard.coords, 238, locale("info.cells_blip"), CellsBlip)
-	createCellsBlip(Config.Locations.freedom.coords, 466, locale("info.freedom_blip"), TimeBlip)
-	createCellsBlip(Config.Locations.shop.coords, 52, locale("info.canteen_blip"), ShopBlip)
+	createCellsBlip(Config.Locations.yard.coords, 238, locale("info.cells_blip"), CellsBlip, 0.8)
+	createCellsBlip(Config.Locations.freedom.coords, 466, locale("info.freedom_blip"), TimeBlip, 0.8)
+	createCellsBlip(Config.Locations.shop.coords, 52, locale("info.canteen_blip"), ShopBlip, 0.8)
 	exports.qbx_core:Notify(Config.introMessages[math.random(1, #Config.introMessages)], "inform", 10000)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
 
