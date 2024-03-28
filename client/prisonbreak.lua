@@ -131,10 +131,6 @@ RegisterNetEvent('prison:client:JailAlarm', function(toggle)
 end)
 
 local function createGateZones()
-    requiredItems = {
-        [1] = {name = exports.ox_inventory:Items().electronickit.name, image = exports.ox_inventory:Items().electronickit.image},
-        [2] = {name = exports.ox_inventory:Items().gatecrack.name, image = exports.ox_inventory:Items().gatecrack.image},
-    }
     currentGate = 0
     for i = 1, #gates do
         lib.zones.sphere({
@@ -143,11 +139,11 @@ local function createGateZones()
             onEnter = function()
                 if QBX.PlayerData.job.type == "leo" then return end
                 currentGate = i
-                TriggerEvent('inventory:client:requiredItems', requiredItems, true)
+                TriggerEvent('inventory:client:requiredItems', Config.requiredItems, true)
             end,
             onLeave = function()
                 if QBX.PlayerData.job.type == "leo" then return end
-                TriggerEvent('inventory:client:requiredItems', requiredItems, false)
+                TriggerEvent('inventory:client:requiredItems', Config.requiredItems, false)
             end,
             inside = function()
                 if securityLockdown then
