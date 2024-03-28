@@ -129,7 +129,7 @@ lib.addCommand('jailalarm', {
         }
     },
 }, function(source, args)
-    if not exports.qbx_policejob:checkLeoAndOnDuty(source) then return end
+    if not exports.qbx_core:GetDutyCountType('leo') then return end
     if args.type == 'on' then
         TriggerClientEvent('prison:client:JailAlarm', source, true)
     elseif args.type == 'off' then
