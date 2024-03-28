@@ -93,3 +93,8 @@ Config.CanteenItems = {
         count = 50,
     }
 }
+
+Config.requiredItems = {
+    [1] = {name = exports.ox_inventory:Items().electronickit.name, image = exports.ox_inventory:Items().electronickit.image},
+    [2] = {name = exports.ox_inventory:Items().gatecrack.name, image = exports.ox_inventory:Items().gatecrack.image},
+}
