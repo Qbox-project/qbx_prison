@@ -14,7 +14,7 @@ end
 -- Events
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
-    if currentGate == 0 or securityLockdown or not gates[currentGate].gatesHit then return end
+    if currentGate == 0 or securityLockdown or not Config.gates[currentGate].gatesHit then return end
     local hasItem = exports.ox_inventory:Search('count', Config.gateCrack)
 
     if not hasItem then
