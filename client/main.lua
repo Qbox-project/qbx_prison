@@ -212,7 +212,6 @@ local function initPrison(time)
     FreezeEntityPosition(cache.ped, false)
 	InJail = true
 	JailTime = time
-	CurrentJob = "Electrician"
 	CreateJobBlip()
 	applyClothes()
 	createCellsBlip()

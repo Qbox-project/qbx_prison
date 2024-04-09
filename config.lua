@@ -8,6 +8,14 @@ Config.gateCrack = 'gatecrack'
 
 Config.Jobs = {
     electrician = {
+        label = "Electrician",
+        icon = "fa-solid fa-bolt",
+        dict = "anim@gangops@facility@servers@",
+        clip = "hotwire",
+        flag = 16,
+        reward = 'phone',
+        rewardChance = 1,
+        canOnlyGetOneReward = true,
         locations = {
             vec3(1761.46, 2540.41, 45.56),
             vec3(1718.54, 2527.802, 45.56),
@@ -17,10 +25,22 @@ Config.Jobs = {
             vec3(1627.936, 2538.393, 45.56),
             vec3(1625.1, 2575.988, 45.56),
         },
-        reward = 'phone',
-        rewardChance = 1, -- out of 100
-        canOnlyGetOneReward = true, -- if true, once reward is found, will not get another
-    }
+    },
+    clean = {
+        label = "Clean",
+        icon = "fa-solid fa-clean",
+        dict = "switch@franklin@cleaning_car",
+        clip = "001946_01_gc_fras_v2_ig_5_exit",
+        flag = 16,
+        reward = 'lockpick',
+        rewardChance = 1,
+        canOnlyGetOneReward = true,
+        locations = {
+            vec3(1774.21, 2552.25, 45.57),
+            vec3(1756.0, 2561.86, 45.57),
+            vec3(1763.81, 2531.61, 45.57),
+        },
+    },
 }
 
 Config.introMessages = {
