@@ -1,6 +1,7 @@
 local currentGate = 0
 local requiredItems = {}
 local securityLockdown = false
+local config = require('config.shared')
 local gates = {
     [1] = {
         gatekey = 13,

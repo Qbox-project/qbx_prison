@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description 'QBX_Prison'
+description 'qbx_prison'
 repository 'https://github.com/Qbox-project/qbx_prison'
 version '1.0.0'
 
@@ -10,7 +10,7 @@ ox_lib 'locale'
 shared_scripts {
     '@ox_lib/init.lua',
     '@qbx_core/modules/lib.lua',
-    'config.lua'
+    'config/shared.lua'
 }
 
 client_scripts {
