@@ -1,5 +1,5 @@
 return {
-    useTarget = true, -- Use ox_target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
+    useTarget = true, -- Use ox_target interactions
     inJailMoney = 80,
     takePhoto = true,
     gateCrack = 'gatecrack',
