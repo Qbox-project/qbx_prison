@@ -1,6 +1,7 @@
 local currentGate = 0
 local requiredItems = {}
 local securityLockdown = false
+local config = require('config.shared')
 local gates = {
     [1] = {
         gatekey = 13,
@@ -32,7 +33,7 @@ end
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
     if currentGate == 0 or securityLockdown or not gates[currentGate].hit then return end
-    local hasItem = exports.ox_inventory:Search('count', Config.gateCrack)
+    local hasItem = exports.ox_inventory:Search('count', config.gateCrack)
     if not hasItem then
         exports.qbx_core:Notify(locale("error.item_missing"), "error")
         return
@@ -76,7 +77,7 @@ RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
 end)
 
 RegisterNetEvent('prison:client:PrisonBreakAlert', function()
-    local coords = Config.Locations.middle.coords
+    local coords = config.locations.middle.coords
     local alertData = {title = locale("info.police_alert_title"), coords = {x = coords.x, y = coords.y, z = coords.z}, description = locale("info.police_alert_description")}
     TriggerEvent("qb-phone:client:addPoliceAlert", alertData)
     TriggerEvent('police:client:policeAlert', coords, locale("info.police_alert_description"))
@@ -181,7 +182,7 @@ local function checkForEscape()
 end
 
 lib.zones.sphere({
-    coords = Config.Locations.middle.coords,
+    coords = config.locations.middle.coords,
     radius = 200,
     onExit = checkForEscape,
 })

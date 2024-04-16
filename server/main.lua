@@ -1,5 +1,6 @@
 local gotItems = {}
 local alarmActivated = false
+local config = require('config.shared')
 
 local function setJailStatus(src, jailTime)
     local player = exports.qbx_core:GetPlayer(src)
@@ -25,7 +26,7 @@ local function jailPlayer(src, minutes)
     exports.ox_inventory:ConfiscateInventory(src)
 
     local player = exports.qbx_core:GetPlayer(src)
-    player.Functions.AddMoney('cash', Config.inJailMoney)
+    player.Functions.AddMoney('cash', config.inJailMoney)
 
     setJailStatus(src, minutes)
     TriggerClientEvent('qbx_prison:client:playerJailed', src, minutes)
@@ -87,7 +88,7 @@ RegisterNetEvent('prison:server:JailAlarm', function()
     if alarmActivated then return end
     local playerPed = GetPlayerPed(source --[[@as number]])
     local coords = GetEntityCoords(playerPed)
-    local middle = Config.Locations.middle.coords
+    local middle = config.locations.middle.coords
     if #(coords.xy - middle.xy) < 200 then return error('"prison:server:JailAlarm" triggered whilst the player was too close to the prison, cancelled event') end
     alarmActivated = true
     TriggerClientEvent('prison:client:JailAlarm', -1, true)
@@ -102,11 +103,11 @@ RegisterNetEvent('qbx_prison:server:completedJob', function()
     local src = source --[[@as number]]
     local player = exports.qbx_core:GetPlayer(src)
     if not player or player.PlayerData.metadata.injail == 0 then return end
-    if Config.Jobs.electrician.canOnlyGetOneReward and gotItems[src] then return end
+    if config.jobs.electrician.canOnlyGetOneReward and gotItems[src] then return end
     local chance = math.random(100)
-    if chance > Config.Jobs.electrician.rewardChance then return end
-    if not player.Functions.AddItem(Config.Jobs.electrician.reward, 1) then return end
-    exports.qbx_core:Notify(src, locale('success.found_item', Config.Jobs.electrician.reward), 'success')
+    if chance > config.jobs.electrician.rewardChance then return end
+    if not player.Functions.AddItem(config.jobs.electrician.reward, 1) then return end
+    exports.qbx_core:Notify(src, locale('success.found_item', config.jobs.electrician.reward), 'success')
     gotItems[src] = true
 end)
 
@@ -116,7 +117,7 @@ end)
 
 exports.ox_inventory:RegisterShop('Canteen', {
     name = 'Prison Canteen',
-    inventory = Config.CanteenItems,
+    inventory = config.canteenItems,
 })
 
 ---@deprecated do not call this event
