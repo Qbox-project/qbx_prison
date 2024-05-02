@@ -1,5 +1,6 @@
 CurrentBlip = 0
 local isWorking = false
+local config = require('config.shared')
 
 local function newRandomArray(size)
     local array = {}
@@ -13,7 +14,7 @@ local function newRandomArray(size)
     return array
 end
 
-local electricalBoxes = newRandomArray(#Config.Jobs.electrician.locations)
+local electricalBoxes = newRandomArray(#config.jobs.electrician.locations)
 local currentBox = 1
 
 --- This will create the blip for the current prison job
@@ -22,7 +23,7 @@ function CreateJobBlip() -- Used globally
         RemoveBlip(CurrentBlip)
     end
 
-    local coords = Config.Jobs.electrician.locations[currentBox]
+    local coords = config.jobs.electrician.locations[currentBox]
     CurrentBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(CurrentBlip, 402)
     SetBlipDisplay(CurrentBlip, 4)
@@ -42,7 +43,7 @@ local function onBoxDone()
     end
 
     if currentBox == #electricalBoxes then
-        electricalBoxes = newRandomArray(#Config.Jobs.electrician.locations)
+        electricalBoxes = newRandomArray(#config.jobs.electrician.locations)
         currentBox = 1
         TriggerServerEvent('qbx_prison:server:completedJob')
     else
@@ -87,9 +88,9 @@ end
 
 -- Threads
 CreateThread(function()
-    for i = 1, #Config.Jobs.electrician.locations do
-        local coords = Config.Jobs.electrician.locations[i]
-        if Config.UseTarget then
+    for i = 1, #config.jobs.electrician.locations do
+        local coords = config.jobs.electrician.locations[i]
+        if config.useTarget then
             exports.ox_target:addBoxZone({
                 coords = coords,
                 size = vec3(1.5, 1.6, 5),
