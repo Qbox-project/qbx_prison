@@ -1,21 +1,27 @@
 local currentGate = 0
 local requiredItems = {}
 local securityLockdown = false
+local config = require('config.shared')
+local gatesHit = {}
+
+for i = 1, #config.gates do
+    gatesHit[i] = false
+end
 
 -- Functions
 
---- This will be triggered once a hack is done on a gate
---- @param success boolean
+---This will be triggered once a hack is done on a gate
+---@param success boolean
 local function onHackDone(success)
-    TriggerServerEvent('qbx_prison:server:onGateHackDone', success, currentGate, Config.gates[currentGate].gatekey)
+    TriggerServerEvent('qbx_prison:server:onGateHackDone', success, currentGate, config.gates[currentGate].gatekey)
     TriggerEvent('mhacking:hide')
 end
 
 -- Events
 
 RegisterNetEvent('electronickit:UseElectronickit', function()
-    if currentGate == 0 or securityLockdown or not Config.gates[currentGate].gatesHit then return end
-    local hasItem = exports.ox_inventory:Search('count', Config.gateCrack)
+    if currentGate == 0 or securityLockdown or not gatesHit[currentGate] then return end
+    local hasItem = exports.ox_inventory:Search('count', config.gateCrack)
 
     if not hasItem then
         exports.qbx_core:Notify(locale("error.item_missing"), "error")
@@ -60,7 +66,7 @@ RegisterNetEvent('prison:client:SetLockDown', function(isLockdown)
 end)
 
 RegisterNetEvent('prison:client:PrisonBreakAlert', function()
-    local coords = Config.Locations.middle.coords
+    local coords = config.locations.middle.coords
     local alertData = {title = locale("info.police_alert_title"), coords = {x = coords.x, y = coords.y, z = coords.z}, description = locale("info.police_alert_description")}
     TriggerEvent("qb-phone:client:addPoliceAlert", alertData)
     TriggerEvent('police:client:policeAlert', coords, locale("info.police_alert_description"))
@@ -83,7 +89,7 @@ RegisterNetEvent('prison:client:PrisonBreakAlert', function()
 end)
 
 RegisterNetEvent('prison:client:SetGateHit', function(key, isHit)
-    Config.gates[key].gatesHit = isHit
+    gatesHit[key] = isHit
 end)
 
 RegisterNetEvent('prison:client:JailAlarm', function(toggle)
@@ -120,9 +126,10 @@ local function createGateZones()
         [2] = {name = exports.ox_inventory:Items().gatecrack.name, image = exports.ox_inventory:Items().gatecrack.image},
     }
     currentGate = 0
-    for i = 1, #Config.gates do
+    for i = 1, #config.gates do
+        local gate = config.gates[i]
         lib.zones.sphere({
-            coords = Config.gates[i].coords,
+            coords = gate.coords,
             radius = 1.5,
             onEnter = function()
                 if QBX.PlayerData.job.type == "leo" then return end
@@ -135,9 +142,9 @@ local function createGateZones()
             end,
             inside = function()
                 if securityLockdown then
-                    qbx.drawText3d({ text = "~r~" .. locale('info.system_lockdown'), coords = Config.gates[i].coords })
-                elseif Config.gates[i].gatesHit then
-                    qbx.drawText3d({ text = locale('info.system_breach'), coords = Config.gates[i].coords })
+                    qbx.drawText3d({ text = "~r~" .. locale('info.system_lockdown'), coords = gate.coords })
+                elseif gatesHit[i] then
+                    qbx.drawText3d({ text = locale('info.system_breach'), coords = gate.coords })
                 end
             end,
         })
@@ -165,7 +172,7 @@ local function checkForEscape()
 end
 
 lib.zones.sphere({
-    coords = Config.Locations.middle.coords,
+    coords = config.locations.middle.coords,
     radius = 200,
     onExit = checkForEscape,
 })

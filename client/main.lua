@@ -6,6 +6,7 @@ TimeBlip = 0
 ShopBlip = 0
 local canteenPed = 0
 local freedomPed = 0
+local config = require('config.shared')
 
 -- Functions
 
@@ -15,7 +16,7 @@ local function createCellsBlip()
 		RemoveBlip(CellsBlip)
 	end
 
-	CellsBlip = AddBlipForCoord(Config.Locations.yard.coords.x, Config.Locations.yard.coords.y, Config.Locations.yard.coords.z)
+	CellsBlip = AddBlipForCoord(config.locations.yard.coords.x, config.locations.yard.coords.y, config.locations.yard.coords.z)
 
 	SetBlipSprite (CellsBlip, 238)
 	SetBlipDisplay(CellsBlip, 4)
@@ -30,7 +31,7 @@ local function createCellsBlip()
 		RemoveBlip(TimeBlip)
 	end
 
-	TimeBlip = AddBlipForCoord(Config.Locations.freedom.coords.x, Config.Locations.freedom.coords.y, Config.Locations.freedom.coords.z)
+	TimeBlip = AddBlipForCoord(config.locations.freedom.coords.x, config.locations.freedom.coords.y, config.locations.freedom.coords.z)
 
 	SetBlipSprite(TimeBlip, 466)
 	SetBlipDisplay(TimeBlip, 4)
@@ -45,7 +46,7 @@ local function createCellsBlip()
 		RemoveBlip(ShopBlip)
 	end
 
-	ShopBlip = AddBlipForCoord(Config.Locations.shop.coords.x, Config.Locations.shop.coords.y, Config.Locations.shop.coords.z)
+	ShopBlip = AddBlipForCoord(config.locations.shop.coords.x, config.locations.shop.coords.y, config.locations.shop.coords.z)
 
 	SetBlipSprite(ShopBlip, 52)
 	SetBlipDisplay(ShopBlip, 4)
@@ -58,8 +59,8 @@ local function createCellsBlip()
 end
 
 local function createPrisonBlip()
-	if not next(Config.Locations.prison) then return end
-	for _, station in pairs(Config.Locations.prison) do
+	if not next(config.locations.prison) then return end
+	for _, station in pairs(config.locations.prison) do
 		local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
 		SetBlipSprite(blip, 188)
 		SetBlipAsShortRange(blip, true)
@@ -82,9 +83,9 @@ local function applyClothes()
 		ClearPedLastWeaponDamage(cache.ped)
 		ResetPedMovementClipset(cache.ped, 0)
 		if QBX.PlayerData.charinfo.gender == 0 then
-			TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.male)
+			TriggerEvent('qb-clothing:client:loadOutfit', config.uniforms.male)
 		else
-			TriggerEvent('qb-clothing:client:loadOutfit', Config.Uniforms.female)
+			TriggerEvent('qb-clothing:client:loadOutfit', config.uniforms.female)
 		end
 	end)
 end
@@ -94,6 +95,36 @@ local function turnOnAlarmIfActive()
 		if not active then return end
 		TriggerEvent('prison:client:JailAlarm', true)
 	end)
+end
+
+local function takePhoto()
+    DoScreenFadeOut(10)
+    FreezeEntityPosition(cache.ped, true)
+    SetPedComponentVariation(cache.ped, 1, -1, -1, -1)
+    ClearPedProp(cache.ped, 0)
+    Wait(1000)
+    SetEntityCoords(cache.ped, config.locations.takePhoto.coords.x, config.locations.takePhoto.coords.y, config.locations.takePhoto.coords.z)
+    SetEntityHeading(cache.ped, 270.0)
+    Wait(1500)
+    DoScreenFadeIn(500)
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)
+    SetEntityHeading(cache.ped, -355.74)
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)
+    SetEntityHeading(cache.ped, 170.74)
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)
+    qbx.playAudio({ audioName = 'Camera_Shoot', audioRef = 'Phone_Soundset_Franklin' })
+    Wait(3000)
+    SetEntityHeading(cache.ped, 270.0)
+    Wait(2000)
+    DoScreenFadeOut(1100)
+    Wait(2000)
 end
 
 local function release()
@@ -109,8 +140,8 @@ local function release()
 		Wait(10)
 	end
 	TriggerServerEvent('qb-clothes:loadPlayerSkin')
-	SetEntityCoords(cache.ped, Config.Locations.outside.coords.x, Config.Locations.outside.coords.y, Config.Locations.outside.coords.z, false, false, false, false)
-	SetEntityHeading(cache.ped, Config.Locations.outside.coords.w)
+	SetEntityCoords(cache.ped, config.locations.outside.coords.x, config.locations.outside.coords.y, config.locations.outside.coords.z, false, false, false, false)
+	SetEntityHeading(cache.ped, config.locations.outside.coords.w)
 
 	Wait(500)
 	DoScreenFadeIn(1000)
@@ -147,10 +178,10 @@ end
 local function spawnNPCsIfNotExisting()
 	if DoesEntityExist(canteenPed) or DoesEntityExist(freedomPed) then return end
 
-	freedomPed = pedCreate('s_m_m_armoured_01', Config.Locations.freedom.coords, 'WORLD_HUMAN_CLIPBOARD')
-	canteenPed = pedCreate('s_m_m_armoured_01', Config.Locations.shop.coords, 'WORLD_HUMAN_CLIPBOARD')
+	freedomPed = pedCreate('s_m_m_armoured_01', config.locations.freedom.coords, 'WORLD_HUMAN_CLIPBOARD')
+	canteenPed = pedCreate('s_m_m_armoured_01', config.locations.shop.coords, 'WORLD_HUMAN_CLIPBOARD')
 
-	if not Config.UseTarget then return end
+	if not config.useTarget then return end
 
 	exports.ox_target:addLocalEntity(freedomPed, {
 		{
@@ -176,13 +207,17 @@ local function spawnNPCsIfNotExisting()
 end
 
 local function initPrison(time)
+    if config.takePhoto then
+        takePhoto()
+    end
+    FreezeEntityPosition(cache.ped, false)
 	InJail = true
 	JailTime = time
 	CurrentJob = "Electrician"
 	CreateJobBlip()
 	applyClothes()
 	createCellsBlip()
-	exports.qbx_core:Notify(Config.introMessages[math.random(1, #Config.introMessages)], "inform", 10000)
+	exports.qbx_core:Notify(config.introMessages[math.random(1, #config.introMessages)], "inform", 10000)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
 
 	CreateThread(function()
@@ -234,7 +269,7 @@ local function onEnter(minutes)
 	while not IsScreenFadedOut() do
 		Wait(10)
 	end
-	local randomStartPosition = Config.Locations.spawns[math.random(1, #Config.Locations.spawns)]
+	local randomStartPosition = config.locations.spawns[math.random(1, #config.locations.spawns)]
 	SetEntityCoords(cache.ped, randomStartPosition.coords.x, randomStartPosition.coords.y, randomStartPosition.coords.z - 0.9, false, false, false, false)
 	SetEntityHeading(cache.ped, randomStartPosition.coords.w)
 	Wait(500)
@@ -255,7 +290,7 @@ RegisterNetEvent('qbx_prison:client:playerReleased', function()
 	release()
 end)
 
-if not Config.UseTarget then
+if not config.useTarget then
 
 	local function listenForKeyPressToLeave()
 		if IsControlJustReleased(0, 38) then
@@ -273,7 +308,7 @@ if not Config.UseTarget then
 
 	CreateThread(function()
 		lib.zones.sphere({
-			coords = Config.Locations.freedom.coords.xyz,
+			coords = config.locations.freedom.coords.xyz,
 			radius = 2.75,
 			onEnter = function()
 				lib.showTextUI(locale('info.check_time'))
@@ -284,7 +319,7 @@ if not Config.UseTarget then
 			inside = listenForKeyPressToLeave,
 		})
 		lib.zones.sphere({
-			coords = Config.Locations.shop.coords.xyz,
+			coords = config.locations.shop.coords.xyz,
 			radius = 2.75,
 			onEnter = function()
 				lib.showTextUI(locale('info.open_canteen'))
