@@ -160,14 +160,14 @@ local function openCanteen()
 end
 
 local function pedCreate(pedModel, position, scenario)
-    local model = lib.requestModel(pedModel)
-    local entity = CreatePed(0, model, position.x, position.y, position.z, position.w, false, true)
+    lib.requestModel(pedModel, 10000)
+    local entity = CreatePed(0, pedModel, position.x, position.y, position.z, position.w, false, true)
 
     if scenario then
         TaskStartScenarioInPlace(entity, scenario, 0, true)
     end
 
-    SetModelAsNoLongerNeeded(model)
+    SetModelAsNoLongerNeeded(pedModel)
     FreezeEntityPosition(entity, true)
     SetEntityInvincible(entity, true)
     SetBlockingOfNonTemporaryEvents(entity, true)
