@@ -32,6 +32,7 @@
     "system_breach": "SYSTEM BREACH",
     "timeleft": "You still have to... %s months",
     "work_blip": "Prison Work",
+    "jail_alarm": "On or Off Alarm Prison",
     "working_electricity": "Connecting Wires"
   },
   "success": {

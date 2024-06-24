@@ -120,6 +120,24 @@ exports.ox_inventory:RegisterShop('Canteen', {
     inventory = config.canteenItems,
 })
 
+lib.addCommand('jailalarm', {
+    help = locale('info.jail_alarm'),
+    params = {
+        {
+            name = 'type',
+            type = 'string',
+            help = locale('info.jail_alarm')
+        }
+    },
+}, function(source, args)
+    if not exports.qbx_core:GetDutyCountType('leo') then return end
+    if args.type == 'on' then
+        TriggerClientEvent('prison:client:JailAlarm', source, true)
+    elseif args.type == 'off' then
+        TriggerClientEvent('prison:client:JailAlarm', source, false)
+    end
+end)
+
 ---@deprecated do not call this event
 RegisterNetEvent('prison:server:SaveJailItems', function()
     lib.print.error(GetInvokingResource(), "invoked deprecated prison:server:SaveJailedItems event. Event has no effect.")
