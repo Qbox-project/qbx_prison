@@ -94,5 +94,20 @@ return {
             price = 4,
             count = 50,
         }
+    },
+
+    gates = {
+        {
+            gatekey = 13,
+            coords = vector3(1845.99, 2604.7, 45.58),
+        },
+        {
+            gatekey = 14,
+            coords = vector3(1819.47, 2604.67, 45.56),
+        },
+        {
+            gatekey = 15,
+            coords = vector3(1804.74, 2616.311, 45.61),
+        }
     }
 }
