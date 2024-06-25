@@ -11,55 +11,27 @@ local config = require('config.shared')
 -- Functions
 
 --- This will create the blips for the cells, time check and shop
-local function createCellsBlip()
-	if DoesBlipExist(CellsBlip) then
-		RemoveBlip(CellsBlip)
-	end
+local function createCellsBlip(coords, sprite, text, existingBlip, size, colour)
+    if DoesBlipExist(existingBlip) then
+        RemoveBlip(existingBlip)
+    end
 
-	CellsBlip = AddBlipForCoord(config.locations.yard.coords.x, config.locations.yard.coords.y, config.locations.yard.coords.z)
+    local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
+    SetBlipSprite(blip, sprite)
+    SetBlipDisplay(blip, 4)
+    SetBlipScale(blip, size)
+    SetBlipAsShortRange(blip, true)
+    SetBlipColour(blip, colour)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName(text)
+    EndTextCommandSetBlipName(blip)
 
-	SetBlipSprite (CellsBlip, 238)
-	SetBlipDisplay(CellsBlip, 4)
-	SetBlipScale  (CellsBlip, 0.8)
-	SetBlipAsShortRange(CellsBlip, true)
-	SetBlipColour(CellsBlip, 4)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(locale("info.cells_blip"))
-	EndTextCommandSetBlipName(CellsBlip)
-
-	if DoesBlipExist(TimeBlip) then
-		RemoveBlip(TimeBlip)
-	end
-
-	TimeBlip = AddBlipForCoord(config.locations.freedom.coords.x, config.locations.freedom.coords.y, config.locations.freedom.coords.z)
-
-	SetBlipSprite(TimeBlip, 466)
-	SetBlipDisplay(TimeBlip, 4)
-	SetBlipScale(TimeBlip, 0.8)
-	SetBlipAsShortRange(TimeBlip, true)
-	SetBlipColour(TimeBlip, 4)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(locale("info.freedom_blip"))
-	EndTextCommandSetBlipName(TimeBlip)
-
-	if DoesBlipExist(ShopBlip) then
-		RemoveBlip(ShopBlip)
-	end
-
-	ShopBlip = AddBlipForCoord(config.locations.shop.coords.x, config.locations.shop.coords.y, config.locations.shop.coords.z)
-
-	SetBlipSprite(ShopBlip, 52)
-	SetBlipDisplay(ShopBlip, 4)
-	SetBlipScale(ShopBlip, 0.5)
-	SetBlipAsShortRange(ShopBlip, true)
-	SetBlipColour(ShopBlip, 0)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(locale("info.canteen_blip"))
-	EndTextCommandSetBlipName(ShopBlip)
+    return blip
 end
 
 local function createPrisonBlip()
-	if not next(config.locations.prison) then return end
+	if table.type(config.locations.prison) == 'empty' then return end
+
 	for _, station in pairs(config.locations.prison) do
 		local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
 		SetBlipSprite(blip, 188)
@@ -76,6 +48,7 @@ end
 
 local function applyClothes()
 	if not DoesEntityExist(cache.ped) then return end
+
 	CreateThread(function()
 		SetPedArmour(cache.ped, 0)
 		ClearPedBloodDamage(cache.ped)
@@ -103,7 +76,7 @@ local function takePhoto()
     SetPedComponentVariation(cache.ped, 1, -1, -1, -1)
     ClearPedProp(cache.ped, 0)
     Wait(1000)
-    SetEntityCoords(cache.ped, config.locations.takePhoto.coords.x, config.locations.takePhoto.coords.y, config.locations.takePhoto.coords.z)
+    SetEntityCoords(cache.ped, config.locations.takePhoto.coords.x, config.locations.takePhoto.coords.y, config.locations.takePhoto.coords.z, false, false, false, false)
     SetEntityHeading(cache.ped, 270.0)
     Wait(1500)
     DoScreenFadeIn(500)
@@ -135,10 +108,12 @@ local function release()
 	RemoveBlip(TimeBlip)
 	RemoveBlip(ShopBlip)
 	exports.qbx_core:Notify(locale("success.free_"))
+
 	DoScreenFadeOut(500)
 	while not IsScreenFadedOut() do
 		Wait(10)
 	end
+
 	TriggerServerEvent('qb-clothes:loadPlayerSkin')
 	SetEntityCoords(cache.ped, config.locations.outside.coords.x, config.locations.outside.coords.y, config.locations.outside.coords.z, false, false, false, false)
 	SetEntityHeading(cache.ped, config.locations.outside.coords.w)
@@ -207,16 +182,19 @@ local function spawnNPCsIfNotExisting()
 end
 
 local function initPrison(time)
-    if config.takePhoto then
-        takePhoto()
-    end
-    FreezeEntityPosition(cache.ped, false)
+	if config.takePhoto then
+		takePhoto()
+	end
+
+	FreezeEntityPosition(cache.ped, false)
 	InJail = true
 	JailTime = time
 	CurrentJob = "Electrician"
 	CreateJobBlip()
 	applyClothes()
-	createCellsBlip()
+	createCellsBlip(config.locations.yard.coords, 238, locale("info.cells_blip"), CellsBlip, 0.8, 4)
+	createCellsBlip(config.locations.freedom.coords, 466, locale("info.freedom_blip"), TimeBlip, 0.8, 4)
+	createCellsBlip(config.locations.shop.coords, 52, locale("info.canteen_blip"), ShopBlip, 0.5, 4)
 	exports.qbx_core:Notify(config.introMessages[math.random(1, #config.introMessages)], "inform", 10000)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
 
@@ -246,7 +224,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 end)
 
 AddEventHandler('onResourceStart', function(resource)
-    if resource ~= GetCurrentResourceName() then return end
+	if resource ~= GetCurrentResourceName() then return end
 	Wait(100)
 	if LocalPlayer.state.isLoggedIn then
 		if QBX.PlayerData.metadata.injail > 0 then
@@ -269,6 +247,7 @@ local function onEnter(minutes)
 	while not IsScreenFadedOut() do
 		Wait(10)
 	end
+
 	local randomStartPosition = config.locations.spawns[math.random(1, #config.locations.spawns)]
 	SetEntityCoords(cache.ped, randomStartPosition.coords.x, randomStartPosition.coords.y, randomStartPosition.coords.z - 0.9, false, false, false, false)
 	SetEntityHeading(cache.ped, randomStartPosition.coords.w)
@@ -277,21 +256,22 @@ local function onEnter(minutes)
 	initPrison(minutes)
 	Wait(2000)
 	DoScreenFadeIn(1000)
-	exports.qbx_core:Notify( locale("error.do_some_work", "Electrician"), "error")
+	exports.qbx_core:Notify(locale("error.do_some_work", "Electrician"), "error")
 end
 
 RegisterNetEvent('qbx_prison:client:playerJailed', function(minutes)
 	if GetInvokingResource() then return end
+
 	onEnter(minutes)
 end)
 
 RegisterNetEvent('qbx_prison:client:playerReleased', function()
 	if GetInvokingResource() then return end
+
 	release()
 end)
 
 if not config.useTarget then
-
 	local function listenForKeyPressToLeave()
 		if IsControlJustReleased(0, 38) then
 			lib.hideTextUI()
@@ -318,6 +298,7 @@ if not config.useTarget then
 			end,
 			inside = listenForKeyPressToLeave,
 		})
+
 		lib.zones.sphere({
 			coords = config.locations.shop.coords.xyz,
 			radius = 2.75,
